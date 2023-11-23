@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "932006681387",
+    "project_id": "d1amond-pa1nt1ng-flutter",
+    "storage_bucket": "d1amond-pa1nt1ng-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932006681387:android:2e08d0b16dc33fad19036e",
+        "android_client_info": {
+          "package_name": "com.example.diamond_painting"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZvVtAiKtQX-8j_5cn7o_D05NNupb3Lhc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

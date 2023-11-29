@@ -1,7 +1,7 @@
 import 'package:diamond_painting/constants/routes.dart';
+import 'package:diamond_painting/utilities/show_error_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -57,16 +57,45 @@ class _LoginViewState extends State<LoginView> {
                   email: email,
                   password: password,
                 );
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  mainRoute,
-                  (route) => false,
-                );
+                final user = FirebaseAuth.instance.currentUser;
+                if (user?.emailVerified ?? false) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    mainRoute,
+                    (route) => false,
+                  );
+                } else {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    verifyEmailRoute,
+                    (route) => false,
+                  );
+                }
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'invalid-email') {
-                  devtools.log('Неверный формат эл. почты');
+                  await showErrorDialog(
+                    context,
+                    'Неверный формат эл. почты',
+                  );
+                } else if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
+                  await showErrorDialog(
+                    context,
+                    'Неправильный адрес эл. почты или пароль',
+                  );
+                } else if (e.code == 'wrong-password') {
+                  await showErrorDialog(
+                    context,
+                    'Неправильный пароль',
+                  );
                 } else {
-                  devtools.log('Неправильный адрес эл. почты или пароль');
+                  await showErrorDialog(
+                    context,
+                    'Ошибка: ${e.code}',
+                  );
                 }
+              } catch (e) {
+                await showErrorDialog(
+                  context,
+                  e.toString(),
+                );
               }
             },
             child: const Text('Войти'),

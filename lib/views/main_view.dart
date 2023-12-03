@@ -22,7 +22,7 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Алмазная мозаика')),
+      backgroundColor: const Color.fromARGB(255, 245, 253, 255),
       body: screens[sectionIndex],
       bottomNavigationBar: CurvedNavigationBar(
           items: const <Widget>[

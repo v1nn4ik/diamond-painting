@@ -1,11 +1,9 @@
 import 'package:diamond_painting/constants/routes.dart';
-import 'package:diamond_painting/firebase_options.dart';
+import 'package:diamond_painting/services/auth/auth_service.dart';
 import 'package:diamond_painting/views/login_view.dart';
 import 'package:diamond_painting/views/main_view.dart';
 import 'package:diamond_painting/views/register_view.dart';
 import 'package:diamond_painting/views/verify_email_view.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -32,15 +30,13 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      ),
+      future: AuthService.firebase().initialize(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
-            final user = FirebaseAuth.instance.currentUser;
+            final user = AuthService.firebase().currentUser;
             if (user != null) {
-              if (user.emailVerified) {
+              if (user.isEmailVerified) {
                 return const MainView();
               } else {
                 return const VerifyEmailView();
@@ -54,29 +50,4 @@ class HomePage extends StatelessWidget {
       },
     );
   }
-}
-
-enum MenuAction { logout }
-
-Future<bool> showLogOutDialog(BuildContext context) {
-  return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Выход'),
-          content: const Text('Вы уверены, что хотите выйти?'),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: const Text('Отмена')),
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: const Text('Выйти')),
-          ],
-        );
-      }).then((value) => value ?? false);
 }

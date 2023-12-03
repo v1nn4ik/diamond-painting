@@ -1,6 +1,9 @@
 import 'package:diamond_painting/constants/routes.dart';
+import 'package:diamond_painting/services/auth/auth_exceptions.dart';
+import 'package:diamond_painting/services/auth/auth_service.dart';
 import 'package:diamond_painting/utilities/show_error_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:diamond_painting/widgets/custom_button.dart';
+import 'package:diamond_painting/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
 class RegisterView extends StatefulWidget {
@@ -31,73 +34,101 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Регистрация')),
+      backgroundColor: const Color.fromARGB(255, 245, 253, 255),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextField(
-            controller: _email,
-            enableSuggestions: false,
-            autocorrect: false,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(hintText: 'Адрес эл. почты'),
+          const Padding(
+            padding: EdgeInsets.only(left: 36.0, right: 36.0),
+            child: Text(
+              'Регистрация',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+              ),
+            ),
           ),
-          TextField(
-            controller: _password,
-            obscureText: true,
-            enableSuggestions: false,
-            autocorrect: false,
-            decoration: const InputDecoration(hintText: 'Пароль'),
+          const SizedBox(
+            height: 16,
           ),
-          TextButton(
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, right: 36.0),
+            child: CustomTextField(
+              controller: _email,
+              hintText: 'Адрес эл. почты',
+              keyboardType: TextInputType.emailAddress,
+              prefixIcon: const Icon(Icons.email_outlined),
+            ),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, right: 36.0),
+            child: CustomTextField(
+              controller: _password,
+              hintText: 'Пароль',
+              keyboardType: TextInputType.visiblePassword,
+              isPassword: true,
+              prefixIcon: const Icon(Icons.lock_outline),
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, right: 36.0),
+            child: CustomButton(
               onPressed: () async {
                 final email = _email.text;
                 final password = _password.text;
                 try {
-                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  await AuthService.firebase().createUser(
                     email: email,
                     password: password,
                   );
-                  final user = FirebaseAuth.instance.currentUser;
-                  await user?.sendEmailVerification();
+                  AuthService.firebase().sendEmailVerification();
                   Navigator.of(context).pushNamed(verifyEmailRoute);
-                } on FirebaseAuthException catch (e) {
-                  if (e.code == 'invalid-email') {
-                    await showErrorDialog(
-                      context,
-                      'Некорректный адрес эл. почты',
-                    );
-                  } else if (e.code == 'weak-password') {
-                    await showErrorDialog(
-                      context,
-                      'Пароль должен содержать минимум 6 символов',
-                    );
-                  } else if (e.code == 'email-already-in-use') {
-                    await showErrorDialog(
-                      context,
-                      'Пользователь с таким адресом эл. почты уже существует',
-                    );
-                  } else {
-                    await showErrorDialog(
-                      context,
-                      'Ошибка: ${e.code}',
-                    );
-                  }
-                } catch (e) {
+                } on WeakPasswordAuthException {
                   await showErrorDialog(
                     context,
-                    e.toString(),
+                    'Пароль должен содержать минимум 6 символов',
+                  );
+                } on InvalidEmailRegAuthException {
+                  await showErrorDialog(
+                    context,
+                    'Некорректный адрес эл. почты',
+                  );
+                } on EmailAlredyInUseAuthException {
+                  await showErrorDialog(
+                    context,
+                    'Пользователь с таким адресом эл. почты уже существует',
+                  );
+                } on GenericAuthException {
+                  await showErrorDialog(
+                    context,
+                    'Ошибка регистрации',
                   );
                 }
               },
-              child: const Text('Зарегистрироваться')),
-          TextButton(
+              btnText: 'Зарегистрироваться',
+            ),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, right: 36.0),
+            child: CustomButton(
               onPressed: () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   loginRoute,
                   (route) => false,
                 );
               },
-              child: const Text('Уже зарегистрированы? Войти')),
+              btnText: 'Уже зарегистрированы? Войти',
+            ),
+          ),
         ],
       ),
     );

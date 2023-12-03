@@ -1,6 +1,6 @@
 import 'package:diamond_painting/constants/routes.dart';
-import 'package:diamond_painting/main.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:diamond_painting/enums/menu_action.dart';
+import 'package:diamond_painting/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class AccountView extends StatelessWidget {
@@ -9,7 +9,9 @@ class AccountView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 245, 253, 255),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 245, 253, 255),
         title: const Text('Аккаунт'),
         actions: [
           PopupMenuButton<MenuAction>(
@@ -18,7 +20,7 @@ class AccountView extends StatelessWidget {
                 case MenuAction.logout:
                   final shouldLogout = await showLogOutDialog(context);
                   if (shouldLogout) {
-                    await FirebaseAuth.instance.signOut();
+                    await AuthService.firebase().logOut();
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       loginRoute,
                       (route) => false,
@@ -39,4 +41,27 @@ class AccountView extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<bool> showLogOutDialog(BuildContext context) {
+  return showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Выход'),
+          content: const Text('Вы уверены, что хотите выйти?'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: const Text('Отмена')),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: const Text('Выйти')),
+          ],
+        );
+      }).then((value) => value ?? false);
 }

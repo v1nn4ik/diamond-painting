@@ -1,6 +1,9 @@
 import 'package:diamond_painting/constants/routes.dart';
+import 'package:diamond_painting/services/auth/auth_exceptions.dart';
+import 'package:diamond_painting/services/auth/auth_service.dart';
 import 'package:diamond_painting/utilities/show_error_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:diamond_painting/widgets/custom_button.dart';
+import 'package:diamond_painting/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
@@ -31,83 +34,111 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Авторизация')),
+      backgroundColor: const Color.fromARGB(255, 245, 253, 255),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextField(
-            controller: _email,
-            enableSuggestions: false,
-            autocorrect: false,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(hintText: 'Адрес эл. почты'),
+          const Padding(
+            padding: EdgeInsets.only(left: 36.0, right: 36.0),
+            child: Text(
+              'Авторизация',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+              ),
+            ),
           ),
-          TextField(
-            controller: _password,
-            obscureText: true,
-            enableSuggestions: false,
-            autocorrect: false,
-            decoration: const InputDecoration(hintText: 'Пароль'),
+          const SizedBox(
+            height: 16,
           ),
-          TextButton(
-            onPressed: () async {
-              final email = _email.text;
-              final password = _password.text;
-              try {
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
-                  email: email,
-                  password: password,
-                );
-                final user = FirebaseAuth.instance.currentUser;
-                if (user?.emailVerified ?? false) {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    mainRoute,
-                    (route) => false,
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, right: 36.0),
+            child: CustomTextField(
+              controller: _email,
+              hintText: 'Адрес эл. почты',
+              keyboardType: TextInputType.emailAddress,
+              prefixIcon: const Icon(Icons.email_outlined),
+            ),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, right: 36.0),
+            child: CustomTextField(
+              controller: _password,
+              hintText: 'Пароль',
+              keyboardType: TextInputType.visiblePassword,
+              isPassword: true,
+              prefixIcon: const Icon(Icons.lock_outline),
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, right: 36.0),
+            child: CustomButton(
+              onPressed: () async {
+                final email = _email.text;
+                final password = _password.text;
+                try {
+                  await AuthService.firebase().logIn(
+                    email: email,
+                    password: password,
                   );
-                } else {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    verifyEmailRoute,
-                    (route) => false,
-                  );
-                }
-              } on FirebaseAuthException catch (e) {
-                if (e.code == 'invalid-email') {
-                  await showErrorDialog(
-                    context,
-                    'Неверный формат эл. почты',
-                  );
-                } else if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
+                  final user = AuthService.firebase().currentUser;
+                  if (user?.isEmailVerified ?? false) {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      mainRoute,
+                      (route) => false,
+                    );
+                  } else {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      verifyEmailRoute,
+                      (route) => false,
+                    );
+                  }
+                } on InvalidLoginCredentialsAuthException {
                   await showErrorDialog(
                     context,
                     'Неправильный адрес эл. почты или пароль',
                   );
-                } else if (e.code == 'wrong-password') {
+                } on InvalidEmailAuthException {
+                  await showErrorDialog(
+                    context,
+                    'Неверный формат эл. почты',
+                  );
+                } on WrongPasswordAuthException {
                   await showErrorDialog(
                     context,
                     'Неправильный пароль',
                   );
-                } else {
+                } on GenericAuthException {
                   await showErrorDialog(
                     context,
-                    'Ошибка: ${e.code}',
+                    'Ошибка аутоидентификации',
                   );
                 }
-              } catch (e) {
-                await showErrorDialog(
-                  context,
-                  e.toString(),
-                );
-              }
-            },
-            child: const Text('Войти'),
+              },
+              btnText: 'Войти',
+            ),
           ),
-          TextButton(
+          const SizedBox(
+            height: 6,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, right: 36.0),
+            child: CustomButton(
               onPressed: () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   registerRoute,
                   (route) => false,
                 );
               },
-              child: const Text('Нет аккаунта? Зарегистрируйтесь'))
+              btnText: 'Нет аккаунта? Зарегистрируйтесь',
+            ),
+          ),
         ],
       ),
     );

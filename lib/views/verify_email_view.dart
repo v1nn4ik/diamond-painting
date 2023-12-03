@@ -1,5 +1,6 @@
 import 'package:diamond_painting/constants/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:diamond_painting/services/auth/auth_service.dart';
+import 'package:diamond_painting/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class VerifyEmailView extends StatefulWidget {
@@ -13,27 +14,64 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Подтверждение адреса эл. почты')),
+      backgroundColor: const Color.fromARGB(255, 245, 253, 255),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-              'Мы отправили ссылку для подтверждения на ваш адрес эл. почты. Откройте его, чтобы подтвердить ваш аккаунт'),
-          const Text('Не получили письмо?'),
-          TextButton(
+          const Padding(
+            padding: EdgeInsets.only(left: 36.0, right: 36.0),
+            child: Text(
+              'Подтверждение адреса \n эл. почты',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 36.0, right: 36.0),
+            child: Text(
+              'Мы отправили ссылку для подтверждения на ваш адрес эл. почты. Откройте его, чтобы подтвердить ваш аккаунт',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, right: 36.0),
+            child: CustomButton(
               onPressed: () async {
-                final user = FirebaseAuth.instance.currentUser;
-                await user?.sendEmailVerification();
-              },
-              child: const Text('Отправить письмо для подтверждения еще раз')),
-          TextButton(
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
+                await AuthService.firebase().logOut();
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                  registerRoute,
+                  loginRoute,
                   (route) => false,
                 );
               },
-              child: const Text('Перезапустить'))
+              btnText: 'Готово, войти',
+            ),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, right: 36.0),
+            child: CustomButton(
+              onPressed: () async {
+                AuthService.firebase().sendEmailVerification();
+              },
+              btnText: 'Отправить письмо еще раз',
+            ),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
         ],
       ),
     );

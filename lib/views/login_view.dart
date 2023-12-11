@@ -1,3 +1,4 @@
+import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/constants/routes.dart';
 import 'package:diamond_painting/services/auth/auth_exceptions.dart';
 import 'package:diamond_painting/services/auth/auth_service.dart';
@@ -34,7 +35,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 245, 253, 255),
+      backgroundColor: AppColors.backgroundColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

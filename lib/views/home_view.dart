@@ -1,3 +1,4 @@
+import 'package:diamond_painting/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatelessWidget {
@@ -6,9 +7,9 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 245, 253, 255),
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 245, 253, 255),
+        backgroundColor: AppColors.backgroundColor,
         title: const Text('Мозаика'),
       ),
     );

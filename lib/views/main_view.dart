@@ -1,4 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/views/account_view.dart';
 import 'package:diamond_painting/views/home_view.dart';
 import 'package:diamond_painting/views/my_works_view.dart';
@@ -22,7 +23,7 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 245, 253, 255),
+      backgroundColor: AppColors.backgroundColor,
       body: screens[sectionIndex],
       bottomNavigationBar: CurvedNavigationBar(
           items: const <Widget>[
@@ -43,7 +44,7 @@ class _MainViewState extends State<MainView> {
           height: 65,
           color: const Color.fromRGBO(54, 172, 196, 100),
           buttonBackgroundColor: const Color.fromRGBO(54, 172, 196, 26),
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.backgroundColor,
           animationCurve: Curves.easeInOut,
           animationDuration: const Duration(milliseconds: 200),
           onTap: (int index) {

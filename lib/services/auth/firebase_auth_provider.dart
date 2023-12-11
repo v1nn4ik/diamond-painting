@@ -4,7 +4,7 @@ import 'package:diamond_painting/services/auth/auth_provider.dart';
 import 'package:diamond_painting/services/auth/auth_exceptions.dart';
 
 import 'package:firebase_auth/firebase_auth.dart'
-    show FirebaseAuth, FirebaseAuthException;
+    show AuthCredential, EmailAuthProvider, FirebaseAuth, FirebaseAuthException;
 import 'package:firebase_core/firebase_core.dart';
 
 class FirebaseAuthProvider implements AuthProvider {
@@ -105,5 +105,20 @@ class FirebaseAuthProvider implements AuthProvider {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+  }
+
+  @override
+  Future<void> deleteAccount({
+    required String password,
+  }) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      AuthCredential credential =
+          EmailAuthProvider.credential(email: user.email!, password: password);
+      await user.reauthenticateWithCredential(credential);
+      await user.delete();
+    } else {
+      throw UserNotLoggedInAuthException();
+    }
   }
 }

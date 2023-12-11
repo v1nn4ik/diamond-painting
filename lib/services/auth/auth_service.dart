@@ -39,4 +39,12 @@ class AuthService implements AuthProvider {
 
   @override
   Future<void> initialize() => provider.initialize();
+
+  @override
+  Future<void> deleteAccount({
+    required String password,
+  }) =>
+      provider.deleteAccount(
+        password: password,
+      );
 }

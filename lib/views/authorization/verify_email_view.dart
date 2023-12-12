@@ -1,8 +1,8 @@
 import 'package:diamond_painting/app_colors.dart';
-import 'package:diamond_painting/constants/routes.dart';
 import 'package:diamond_painting/services/auth/auth_service.dart';
 import 'package:diamond_painting/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({super.key});
@@ -50,10 +50,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
             child: CustomButton(
               onPressed: () async {
                 await AuthService.firebase().logOut();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  loginRoute,
-                  (route) => false,
-                );
+                context.goNamed('login');
               },
               btnText: 'Готово, войти',
             ),

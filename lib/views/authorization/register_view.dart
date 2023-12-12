@@ -1,20 +1,20 @@
 import 'package:diamond_painting/app_colors.dart';
-import 'package:diamond_painting/constants/routes.dart';
 import 'package:diamond_painting/services/auth/auth_exceptions.dart';
 import 'package:diamond_painting/services/auth/auth_service.dart';
 import 'package:diamond_painting/utilities/show_error_dialog.dart';
 import 'package:diamond_painting/widgets/custom_button.dart';
 import 'package:diamond_painting/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class RegisterView extends StatefulWidget {
+  const RegisterView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
 
@@ -42,7 +42,7 @@ class _LoginViewState extends State<LoginView> {
           const Padding(
             padding: EdgeInsets.only(left: 36.0, right: 36.0),
             child: Text(
-              'Авторизация',
+              'Регистрация',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 24,
@@ -84,45 +84,35 @@ class _LoginViewState extends State<LoginView> {
                 final email = _email.text;
                 final password = _password.text;
                 try {
-                  await AuthService.firebase().logIn(
+                  await AuthService.firebase().createUser(
                     email: email,
                     password: password,
                   );
-                  final user = AuthService.firebase().currentUser;
-                  if (user?.isEmailVerified ?? false) {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      mainRoute,
-                      (route) => false,
-                    );
-                  } else {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      verifyEmailRoute,
-                      (route) => false,
-                    );
-                  }
-                } on InvalidLoginCredentialsAuthException {
+                  AuthService.firebase().sendEmailVerification();
+                  context.goNamed('verifyEmail');
+                } on WeakPasswordAuthException {
                   await showErrorDialog(
                     context,
-                    'Неправильный адрес эл. почты или пароль',
+                    'Пароль должен содержать минимум 6 символов',
                   );
-                } on InvalidEmailAuthException {
+                } on InvalidEmailRegAuthException {
                   await showErrorDialog(
                     context,
-                    'Неверный формат эл. почты',
+                    'Некорректный адрес эл. почты',
                   );
-                } on WrongPasswordAuthException {
+                } on EmailAlredyInUseAuthException {
                   await showErrorDialog(
                     context,
-                    'Неправильный пароль',
+                    'Пользователь с таким адресом эл. почты уже существует',
                   );
                 } on GenericAuthException {
                   await showErrorDialog(
                     context,
-                    'Ошибка аутоидентификации',
+                    'Ошибка регистрации',
                   );
                 }
               },
-              btnText: 'Войти',
+              btnText: 'Зарегистрироваться',
             ),
           ),
           const SizedBox(
@@ -132,12 +122,9 @@ class _LoginViewState extends State<LoginView> {
             padding: const EdgeInsets.only(left: 36.0, right: 36.0),
             child: CustomButton(
               onPressed: () {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  registerRoute,
-                  (route) => false,
-                );
+                context.goNamed('login');
               },
-              btnText: 'Нет аккаунта? Зарегистрируйтесь',
+              btnText: 'Уже зарегистрированы? Войти',
             ),
           ),
         ],

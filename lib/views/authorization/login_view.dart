@@ -1,20 +1,20 @@
 import 'package:diamond_painting/app_colors.dart';
-import 'package:diamond_painting/constants/routes.dart';
 import 'package:diamond_painting/services/auth/auth_exceptions.dart';
 import 'package:diamond_painting/services/auth/auth_service.dart';
 import 'package:diamond_painting/utilities/show_error_dialog.dart';
 import 'package:diamond_painting/widgets/custom_button.dart';
 import 'package:diamond_painting/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
 
   @override
-  State<RegisterView> createState() => _RegisterViewState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
-class _RegisterViewState extends State<RegisterView> {
+class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
 
@@ -42,7 +42,7 @@ class _RegisterViewState extends State<RegisterView> {
           const Padding(
             padding: EdgeInsets.only(left: 36.0, right: 36.0),
             child: Text(
-              'Регистрация',
+              'Авторизация',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 24,
@@ -84,35 +84,39 @@ class _RegisterViewState extends State<RegisterView> {
                 final email = _email.text;
                 final password = _password.text;
                 try {
-                  await AuthService.firebase().createUser(
+                  await AuthService.firebase().logIn(
                     email: email,
                     password: password,
                   );
-                  AuthService.firebase().sendEmailVerification();
-                  Navigator.of(context).pushNamed(verifyEmailRoute);
-                } on WeakPasswordAuthException {
+                  final user = AuthService.firebase().currentUser;
+                  if (user?.isEmailVerified ?? false) {
+                    context.goNamed('info');
+                  } else {
+                    context.goNamed('verifyEmail');
+                  }
+                } on InvalidLoginCredentialsAuthException {
                   await showErrorDialog(
                     context,
-                    'Пароль должен содержать минимум 6 символов',
+                    'Неправильный адрес эл. почты или пароль',
                   );
-                } on InvalidEmailRegAuthException {
+                } on InvalidEmailAuthException {
                   await showErrorDialog(
                     context,
-                    'Некорректный адрес эл. почты',
+                    'Неверный формат эл. почты',
                   );
-                } on EmailAlredyInUseAuthException {
+                } on WrongPasswordAuthException {
                   await showErrorDialog(
                     context,
-                    'Пользователь с таким адресом эл. почты уже существует',
+                    'Неправильный пароль',
                   );
                 } on GenericAuthException {
                   await showErrorDialog(
                     context,
-                    'Ошибка регистрации',
+                    'Ошибка аутоидентификации',
                   );
                 }
               },
-              btnText: 'Зарегистрироваться',
+              btnText: 'Войти',
             ),
           ),
           const SizedBox(
@@ -122,12 +126,9 @@ class _RegisterViewState extends State<RegisterView> {
             padding: const EdgeInsets.only(left: 36.0, right: 36.0),
             child: CustomButton(
               onPressed: () {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  loginRoute,
-                  (route) => false,
-                );
+                context.goNamed('register');
               },
-              btnText: 'Уже зарегистрированы? Войти',
+              btnText: 'Нет аккаунта? Зарегистрируйтесь',
             ),
           ),
         ],

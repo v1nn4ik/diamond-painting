@@ -37,21 +37,21 @@ class _MainWrapperState extends State<MainWrapper> {
         items: const <Widget>[
           Icon(
             Icons.apps,
-            color: Color.fromRGBO(3, 4, 94, 68),
+            color: AppColors.btnTextColor,
           ),
           Icon(
             Icons.diamond_outlined,
-            color: Color.fromRGBO(3, 4, 94, 68),
+            color: AppColors.btnTextColor,
           ),
           Icon(
             Icons.account_circle_outlined,
-            color: Color.fromRGBO(3, 4, 94, 68),
+            color: AppColors.btnTextColor,
           )
         ],
-        index: 1,
+        index: 0,
         height: 65,
-        color: const Color.fromRGBO(54, 172, 196, 100),
-        buttonBackgroundColor: const Color.fromRGBO(54, 172, 196, 26),
+        color: AppColors.btnBackgroundColor,
+        buttonBackgroundColor: AppColors.btnBackgroundColor,
         backgroundColor: AppColors.backgroundColor,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 200),

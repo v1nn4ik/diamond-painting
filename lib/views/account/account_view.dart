@@ -1,7 +1,7 @@
 import 'package:diamond_painting/services/auth/auth_service.dart';
+import 'package:diamond_painting/views/account/account_info_view.dart';
 import 'package:diamond_painting/views/authorization/login_view.dart';
 import 'package:diamond_painting/views/authorization/verify_email_view.dart';
-import 'package:diamond_painting/views/account_info_view.dart';
 import 'package:flutter/material.dart';
 
 class AccountView extends StatefulWidget {

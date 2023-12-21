@@ -3,6 +3,7 @@ import 'package:diamond_painting/services/auth/auth_service.dart';
 import 'package:diamond_painting/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({super.key});
@@ -19,26 +20,28 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 36.0, right: 36.0),
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, right: 36.0),
             child: Text(
               'Подтверждение адреса \n эл. почты',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: GoogleFonts.montserrat(
                 fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
           const SizedBox(
             height: 16,
           ),
-          const Padding(
-            padding: EdgeInsets.only(left: 36.0, right: 36.0),
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, right: 36.0),
             child: Text(
               'Мы отправили ссылку для подтверждения на ваш адрес эл. почты. Откройте его, чтобы подтвердить ваш аккаунт',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: GoogleFonts.montserrat(
                 fontSize: 16,
+                fontWeight: FontWeight.normal,
               ),
             ),
           ),

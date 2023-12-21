@@ -1,3 +1,4 @@
+import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,7 @@ Future<bool> deleteAccountDialog(
           title: const Text('Удаление аккаунта'),
           content: const Text(
               'Вы уверены, что хотите удалить аккаунт? Все ваши работы и прогресс будут утеряны'),
+          backgroundColor: AppColors.backgroundColor,
           actions: [
             CustomTextField(
               controller: pass,
@@ -28,6 +30,11 @@ Future<bool> deleteAccountDialog(
                     onPressed: () {
                       Navigator.of(context).pop(true);
                     },
+                    style: TextButton.styleFrom(
+                      textStyle: const TextStyle(
+                        color: AppColors.btnTextColor,
+                      ),
+                    ),
                     child: const Text('Удалить')),
                 const SizedBox(
                   width: 20,
@@ -36,6 +43,11 @@ Future<bool> deleteAccountDialog(
                     onPressed: () {
                       Navigator.of(context).pop(false);
                     },
+                    style: TextButton.styleFrom(
+                      textStyle: const TextStyle(
+                        color: AppColors.btnTextColor,
+                      ),
+                    ),
                     child: const Text('Отмена')),
               ],
             )

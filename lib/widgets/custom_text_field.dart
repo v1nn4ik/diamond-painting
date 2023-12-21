@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -44,10 +45,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       obscuringCharacter: widget.obscureCharacter!,
       enableSuggestions: false,
       autocorrect: false,
-      style: const TextStyle(
-        fontSize: 14,
-        color: Colors.black,
-      ),
+      style: GoogleFonts.montserrat(
+          fontSize: 14, color: Colors.black, fontWeight: FontWeight.normal),
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(top: 12.0),
         constraints: BoxConstraints(

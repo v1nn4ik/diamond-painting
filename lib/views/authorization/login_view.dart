@@ -6,6 +6,7 @@ import 'package:diamond_painting/widgets/custom_button.dart';
 import 'package:diamond_painting/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -39,13 +40,14 @@ class _LoginViewState extends State<LoginView> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 36.0, right: 36.0),
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, right: 36.0),
             child: Text(
               'Авторизация',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: GoogleFonts.montserrat(
                 fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -128,6 +130,7 @@ class _LoginViewState extends State<LoginView> {
               onPressed: () {
                 context.goNamed('register');
               },
+              btnHeight: 56,
               btnText: 'Нет аккаунта? Зарегистрируйтесь',
             ),
           ),

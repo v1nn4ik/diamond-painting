@@ -1,4 +1,6 @@
+import 'package:diamond_painting/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomButtonWithIcon extends StatelessWidget {
   final VoidCallback onPressed;
@@ -9,7 +11,8 @@ class CustomButtonWithIcon extends StatelessWidget {
   final Color? btnTextColor;
   final double? fontSize;
   final double? borderRadius;
-  final Icon btnIcon;
+  final Icon? btnIcon;
+  final FontWeight? fontWeight;
   const CustomButtonWithIcon({
     super.key,
     required this.onPressed,
@@ -18,9 +21,10 @@ class CustomButtonWithIcon extends StatelessWidget {
     this.fontSize = 10,
     this.btnHeight,
     this.btnWidth,
-    this.btnColor = const Color.fromRGBO(26, 135, 192, 100),
+    this.btnColor = AppColors.warEnableColor,
     this.borderRadius = 10.0,
-    required this.btnIcon,
+    this.btnIcon,
+    this.fontWeight = FontWeight.w600,
   });
 
   @override
@@ -35,16 +39,19 @@ class CustomButtonWithIcon extends StatelessWidget {
           backgroundColor: btnColor,
           elevation: 1,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
+            borderRadius: BorderRadius.all(
+              Radius.circular(borderRadius!),
+            ),
           ),
           padding: const EdgeInsets.only(left: 0, right: 10)),
-      icon: btnIcon,
+      icon: btnIcon!,
       label: Text(
         btnText,
         textAlign: TextAlign.center,
-        style: TextStyle(
+        style: GoogleFonts.montserrat(
           color: btnTextColor,
           fontSize: fontSize,
+          fontWeight: fontWeight,
         ),
       ),
     );

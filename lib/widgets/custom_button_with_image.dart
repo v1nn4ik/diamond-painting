@@ -1,5 +1,6 @@
 import 'package:diamond_painting/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomButtomWithImage extends StatelessWidget {
@@ -11,8 +12,10 @@ class CustomButtomWithImage extends StatelessWidget {
   final double? fontSize;
   final double? borderRadius;
   final Image? btnImage;
+  final SvgPicture? btnSvgImage;
   final double? btnImageRadius;
   final FontWeight? fontWeight;
+  final double? customWidth;
   const CustomButtomWithImage({
     super.key,
     required this.onPressed,
@@ -25,6 +28,8 @@ class CustomButtomWithImage extends StatelessWidget {
     this.fontWeight = FontWeight.bold,
     this.btnImageRadius = 10,
     this.foregroundColor = AppColors.btnTextColor,
+    this.btnSvgImage,
+    this.customWidth,
   });
 
   @override
@@ -34,6 +39,7 @@ class CustomButtomWithImage extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         foregroundColor: foregroundColor,
         backgroundColor: btnColor,
+        minimumSize: const Size(327, 115),
         elevation: 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
@@ -51,9 +57,12 @@ class CustomButtomWithImage extends StatelessWidget {
               padding: const EdgeInsets.only(top: 16, bottom: 16),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(btnImageRadius!),
-                child: btnImage,
+                child: btnImage ?? btnSvgImage,
               ),
             ),
+          ),
+          SizedBox(
+            width: customWidth,
           ),
           Flexible(
             flex: 3,

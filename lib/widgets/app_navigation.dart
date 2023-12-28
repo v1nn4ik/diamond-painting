@@ -7,8 +7,11 @@ import 'package:diamond_painting/views/authorization/register_view.dart';
 import 'package:diamond_painting/views/authorization/verify_email_view.dart';
 import 'package:diamond_painting/views/main_wrapper.dart';
 import 'package:diamond_painting/views/mosaic_view.dart';
+import 'package:diamond_painting/views/new_mosaic/code_view.dart';
 import 'package:diamond_painting/views/new_mosaic/mosaic_color_view.dart';
 import 'package:diamond_painting/views/new_mosaic/mosaic_hints_view.dart';
+import 'package:diamond_painting/views/new_mosaic/mosaic_shape_view.dart';
+import 'package:diamond_painting/views/new_mosaic/mosaic_size_view.dart';
 import 'package:diamond_painting/views/new_mosaic/photo_selection_view.dart';
 import 'package:diamond_painting/views/new_mosaic/photo_upload_view.dart';
 import 'package:diamond_painting/views/works_recomendations/works_rec_view.dart';
@@ -61,6 +64,26 @@ class AppNavigation {
                     },
                   ),
                   GoRoute(
+                    path: 'mosaicShape',
+                    name: 'mosaicShape',
+                    pageBuilder: (context, state) {
+                      return buildPageWithDefaultTransition(
+                          context: context,
+                          state: state,
+                          child: const MosaicShapeView());
+                    },
+                  ),
+                  GoRoute(
+                    path: 'mosaicSize',
+                    name: 'mosaicSize',
+                    pageBuilder: (context, state) {
+                      return buildPageWithDefaultTransition(
+                          context: context,
+                          state: state,
+                          child: const MosaicSizeView());
+                    },
+                  ),
+                  GoRoute(
                     path: 'mosaicHints',
                     name: 'mosaicHints',
                     pageBuilder: (context, state) {
@@ -88,6 +111,16 @@ class AppNavigation {
                           context: context,
                           state: state,
                           child: const PhotoSelectionView());
+                    },
+                  ),
+                  GoRoute(
+                    path: 'code',
+                    name: 'code',
+                    pageBuilder: (context, state) {
+                      return buildPageWithDefaultTransition(
+                          context: context,
+                          state: state,
+                          child: const CodeView());
                     },
                   ),
                 ],

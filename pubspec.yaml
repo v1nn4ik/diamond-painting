@@ -45,6 +45,9 @@ dependencies:
   google_fonts: ^6.1.0
   flutter_svg: ^2.0.9
   image_picker: ^1.0.5
+  http: ^1.1.2
+  dio: ^5.4.0
+  http_parser: ^4.0.2
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +84,15 @@ flutter:
     - assets/images/squareDiamond.svg
     - assets/images/circleDiamond.svg
     - assets/images/image1.jpg
+    - assets/images/a2.svg
+    - assets/images/ava.svg
+    - assets/images/editButton.svg
+    - assets/images/logo.svg
+    - assets/images/tg.svg
+    - assets/images/vk.svg
+    - assets/images/email.svg
+    - assets/images/pass.svg
+    - assets/images/phoneNumber.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

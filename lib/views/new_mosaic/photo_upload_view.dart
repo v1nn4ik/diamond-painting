@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/custom_button.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,7 +16,7 @@ class PhotoUploadView extends StatefulWidget {
 }
 
 class _PhotoUploadViewState extends State<PhotoUploadView> {
-  File? _selectedImage;
+  String? mosaicPhotoUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +47,17 @@ class _PhotoUploadViewState extends State<PhotoUploadView> {
             child: Container(),
           ),
           CustomButton(
-            onPressed: () {
-              // _pickImageFromGallery();
+            onPressed: () async {
+              File? image;
+              var imagePicker =
+                  await ImagePicker().pickImage(source: ImageSource.gallery);
+
+              if (imagePicker != null) {
+                setState(() {
+                  image = File(imagePicker.path);
+                });
+              }
+              _uploadFileAsFormData(image!.path);
               context.goNamed('photoSelection');
             },
             btnText: 'Загрузить',
@@ -67,19 +77,24 @@ class _PhotoUploadViewState extends State<PhotoUploadView> {
               textAlign: TextAlign.center,
             ),
           ),
-          _selectedImage != null ? Image.file(_selectedImage!) : const Text('')
         ],
       ),
     );
   }
 
-  Future _pickImageFromGallery() async {
-    final returnedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (returnedImage == null) return;
-    setState(() {
-      _selectedImage = File(returnedImage.path);
-    });
+  Future _uploadFileAsFormData(String path) async {
+    Dio dio = Dio();
+    MultipartFile file = await MultipartFile.fromFile(
+      path,
+      filename: 'image',
+    );
+    var formData = FormData();
+    formData.files.add(MapEntry('img', file));
+    Response response = await dio.post(
+      'http://127.0.0.1:8000/img',
+      data: formData,
+    );
+    mosaicPhotoUrl = response.data['link'];
+    print(mosaicPhotoUrl);
   }
 }

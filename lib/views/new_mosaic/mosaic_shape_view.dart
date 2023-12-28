@@ -1,11 +1,12 @@
 import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/custom_button_with_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MosaicColorView extends StatelessWidget {
-  const MosaicColorView({super.key});
+class MosaicShapeView extends StatelessWidget {
+  const MosaicShapeView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class MosaicColorView extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 48, right: 48),
                 child: Text(
-                  'Выберите желаемое цветовое решение',
+                  'Выберите желаемую форму алмаза',
                   style: GoogleFonts.montserrat(
                     color: AppColors.btnTextColor,
                     fontSize: 20,
@@ -38,30 +39,28 @@ class MosaicColorView extends StatelessWidget {
             ),
             CustomButtomWithImage(
               onPressed: () {
-                context.goNamed('mosaicShape');
+                context.goNamed('mosaicSize');
               },
-              btnText: 'Черно-белый',
-              btnImage: Image.asset('assets/images/catWB.jpg'),
+              btnText: 'Квадратная',
+              btnSvgImage: SvgPicture.asset(
+                'assets/images/squareDiamond.svg',
+                width: 60,
+                height: 60,
+              ),
             ),
             const SizedBox(
               height: 24,
             ),
             CustomButtomWithImage(
               onPressed: () {
-                context.goNamed('mosaicShape');
+                context.goNamed('mosaicSize');
               },
-              btnText: 'Cепия',
-              btnImage: Image.asset('assets/images/catS.jpg'),
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-            CustomButtomWithImage(
-              onPressed: () {
-                context.goNamed('mosaicShape');
-              },
-              btnText: 'Поп-арт',
-              btnImage: Image.asset('assets/images/catP.jpg'),
+              btnText: 'Круглая',
+              btnSvgImage: SvgPicture.asset(
+                'assets/images/circleDiamond.svg',
+                width: 50,
+                height: 50,
+              ),
             ),
           ],
         ),

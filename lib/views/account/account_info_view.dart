@@ -1,10 +1,13 @@
 import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/services/auth/auth_service.dart';
 import 'package:diamond_painting/widgets/custom_button_with_icon.dart';
+import 'package:diamond_painting/widgets/custom_filed_with_icon.dart';
 import 'package:diamond_painting/widgets/delete_account_dialog.dart';
 import 'package:diamond_painting/widgets/log_out_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AccountInfoView extends StatefulWidget {
   const AccountInfoView({super.key});
@@ -35,6 +38,76 @@ class _AccountInfoViewState extends State<AccountInfoView> {
       body: Padding(
         padding: const EdgeInsets.only(top: 63.0),
         child: Column(children: [
+          SvgPicture.asset('assets/images/ava.svg'),
+          Text(
+            'User',
+            style: GoogleFonts.montserrat(
+              color: AppColors.btnTextColor,
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(
+            height: 18,
+          ),
+          CustomFieldWithIcon(
+            fieldImage: SvgPicture.asset(
+              'assets/images/email.svg',
+            ),
+            textTitle: 'Почта',
+            text: 'vinnik-03@mail.ru',
+            editButton: IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                'assets/images/editButton.svg',
+                width: 19.5,
+                height: 19.5,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 18,
+          ),
+          CustomFieldWithIcon(
+            fieldImage: SvgPicture.asset(
+              'assets/images/phoneNumber.svg',
+              width: 35,
+              height: 35,
+            ),
+            textTitle: 'Телефон',
+            text: '+7 (936) 525 28 31   ',
+            editButton: IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                'assets/images/editButton.svg',
+                width: 19.5,
+                height: 19.5,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 18,
+          ),
+          CustomFieldWithIcon(
+            fieldImage: SvgPicture.asset(
+              'assets/images/pass.svg',
+              width: 35,
+              height: 35,
+            ),
+            textTitle: 'Пароль',
+            text: '*************              ',
+            editButton: IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                'assets/images/editButton.svg',
+                width: 19.5,
+                height: 19.5,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 18,
+          ),
           CustomButtonWithIcon(
             onPressed: () {
               context.goNamed('contacts');

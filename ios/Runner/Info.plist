@@ -3,7 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Приложению необходим доступ к вашей галереи.</string>
+	<string>Приложению необходим доступ к вашей галерее.</string>
+	<key>NSDocumentDirectory</key>
+	<string>Приложению необходим доступ к вашим файлам.</string>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

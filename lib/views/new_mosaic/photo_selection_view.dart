@@ -2,16 +2,40 @@ import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/custom_button.dart';
 import 'package:diamond_painting/widgets/custom_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class PhotoSelectionView extends StatelessWidget {
+class PhotoSelectionView extends StatefulWidget {
   const PhotoSelectionView({
     super.key,
   });
 
   @override
+  State<PhotoSelectionView> createState() => _PhotoSelectionViewState();
+}
+
+class _PhotoSelectionViewState extends State<PhotoSelectionView> {
+  String? mosaicUrl;
+
+  void _takeMosaics() async {
+    const FlutterSecureStorage storage = FlutterSecureStorage();
+    String url = await storage.read(key: 'mosaic') ?? '';
+    setState(() {
+      mosaicUrl = url;
+    });
+  }
+
+  @override
+  void initState() {
+    _takeMosaics();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    _takeMosaics();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.backgroundColor,
@@ -39,28 +63,54 @@ class PhotoSelectionView extends StatelessWidget {
               flex: 1,
               child: Container(),
             ),
-            const CustomContainer(
-              width: 200,
-              height: 200,
+            CustomContainer(
+              width: 180,
+              height: 240,
               borderRadius: 15,
               shadowRadius: 20,
+              imageUrl: mosaicUrl,
             ),
             Flexible(
               flex: 1,
               child: Container(),
             ),
             Container(
-              height: 120,
+              height: 140,
               color: AppColors.btnBackgroundColor,
-              child: const SingleChildScrollView(
+              child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    CustomContainer(width: 95, height: 95, borderRadius: 15),
-                    CustomContainer(width: 95, height: 95, borderRadius: 15),
-                    CustomContainer(width: 95, height: 95, borderRadius: 15),
-                    CustomContainer(width: 95, height: 95, borderRadius: 15),
-                    CustomContainer(width: 95, height: 95, borderRadius: 15),
+                    CustomContainer(
+                      width: 90,
+                      height: 120,
+                      borderRadius: 15,
+                      imageUrl: mosaicUrl,
+                    ),
+                    CustomContainer(
+                      width: 90,
+                      height: 120,
+                      borderRadius: 15,
+                      imageUrl: mosaicUrl,
+                    ),
+                    CustomContainer(
+                      width: 90,
+                      height: 120,
+                      borderRadius: 15,
+                      imageUrl: mosaicUrl,
+                    ),
+                    CustomContainer(
+                      width: 90,
+                      height: 120,
+                      borderRadius: 15,
+                      imageUrl: mosaicUrl,
+                    ),
+                    CustomContainer(
+                      width: 90,
+                      height: 120,
+                      borderRadius: 15,
+                      imageUrl: mosaicUrl,
+                    ),
                   ],
                 ),
               ),

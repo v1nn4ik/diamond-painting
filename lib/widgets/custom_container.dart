@@ -5,12 +5,14 @@ class CustomContainer extends StatelessWidget {
   final double width;
   final double height;
   final double borderRadius;
+  final Color? color;
   final Color? shadowColor;
   final double? shadowRadius;
   final double? offsetX;
   final double? offsetY;
   final double? paddingLeft;
   final double? paddingRight;
+  final String? imageUrl;
 
   const CustomContainer(
       {super.key,
@@ -22,7 +24,9 @@ class CustomContainer extends StatelessWidget {
       this.offsetX = 0,
       this.offsetY = 4,
       this.paddingLeft = 12,
-      this.paddingRight = 0});
+      this.paddingRight = 0,
+      this.color = AppColors.warEnableTextColor,
+      this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +51,19 @@ class CustomContainer extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-            color: AppColors.warEnableTextColor,
+            color: color,
           ),
+          child: imageUrl != null
+              ? Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: NetworkImage(imageUrl!),
+                      ),
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(borderRadius))),
+                )
+              : null,
         ),
       ),
     );

@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/custom_button.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,8 +15,6 @@ class PhotoUploadView extends StatefulWidget {
 }
 
 class _PhotoUploadViewState extends State<PhotoUploadView> {
-  String? mosaicPhotoUrl;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,16 +45,37 @@ class _PhotoUploadViewState extends State<PhotoUploadView> {
           ),
           CustomButton(
             onPressed: () async {
-              File? image;
-              var imagePicker =
-                  await ImagePicker().pickImage(source: ImageSource.gallery);
+              const FlutterSecureStorage storage = FlutterSecureStorage();
 
+              String? imagePath;
+              String? mosaicPhotoUrl;
+
+              XFile? imagePicker =
+                  await ImagePicker().pickImage(source: ImageSource.gallery);
               if (imagePicker != null) {
                 setState(() {
-                  image = File(imagePicker.path);
+                  imagePath = imagePicker.path;
                 });
               }
-              _uploadFileAsFormData(image!.path);
+
+              Dio dio = Dio();
+              MultipartFile file = await MultipartFile.fromFile(
+                imagePath!,
+                filename: 'image',
+              );
+              var formData = FormData();
+              formData.files.add(MapEntry('img', file));
+              Response response = await dio.post(
+                'http://127.0.0.1:8000/mosaic',
+                data: formData,
+              );
+              setState(() {
+                mosaicPhotoUrl = response.data.toString();
+              });
+
+              storage.write(key: 'mosaic', value: mosaicPhotoUrl!);
+              storage.write(key: 'photo', value: imagePath!);
+
               context.goNamed('photoSelection');
             },
             btnText: 'Загрузить',
@@ -80,21 +98,5 @@ class _PhotoUploadViewState extends State<PhotoUploadView> {
         ],
       ),
     );
-  }
-
-  Future _uploadFileAsFormData(String path) async {
-    Dio dio = Dio();
-    MultipartFile file = await MultipartFile.fromFile(
-      path,
-      filename: 'image',
-    );
-    var formData = FormData();
-    formData.files.add(MapEntry('img', file));
-    Response response = await dio.post(
-      'http://127.0.0.1:8000/img',
-      data: formData,
-    );
-    mosaicPhotoUrl = response.data['link'];
-    print(mosaicPhotoUrl);
   }
 }

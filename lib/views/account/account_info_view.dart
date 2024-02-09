@@ -38,7 +38,7 @@ class _AccountInfoViewState extends State<AccountInfoView> {
       body: Padding(
         padding: const EdgeInsets.only(top: 63.0),
         child: Column(children: [
-          SvgPicture.asset('assets/images/ava.svg'),
+          SvgPicture.asset('assets/icons/user_info/ava.svg'),
           Text(
             'User',
             style: GoogleFonts.montserrat(
@@ -52,14 +52,14 @@ class _AccountInfoViewState extends State<AccountInfoView> {
           ),
           CustomFieldWithIcon(
             fieldImage: SvgPicture.asset(
-              'assets/images/email.svg',
+              'assets/icons/user_info/email.svg',
             ),
             textTitle: 'Почта',
             text: 'vinnik-03@mail.ru',
             editButton: IconButton(
               onPressed: () {},
               icon: SvgPicture.asset(
-                'assets/images/editButton.svg',
+                'assets/icons/user_info/editButton.svg',
                 width: 19.5,
                 height: 19.5,
               ),
@@ -70,7 +70,7 @@ class _AccountInfoViewState extends State<AccountInfoView> {
           ),
           CustomFieldWithIcon(
             fieldImage: SvgPicture.asset(
-              'assets/images/phoneNumber.svg',
+              'assets/icons/user_info/phoneNumber.svg',
               width: 35,
               height: 35,
             ),
@@ -79,7 +79,7 @@ class _AccountInfoViewState extends State<AccountInfoView> {
             editButton: IconButton(
               onPressed: () {},
               icon: SvgPicture.asset(
-                'assets/images/editButton.svg',
+                'assets/icons/user_info/editButton.svg',
                 width: 19.5,
                 height: 19.5,
               ),
@@ -90,7 +90,7 @@ class _AccountInfoViewState extends State<AccountInfoView> {
           ),
           CustomFieldWithIcon(
             fieldImage: SvgPicture.asset(
-              'assets/images/pass.svg',
+              'assets/icons/user_info/pass.svg',
               width: 35,
               height: 35,
             ),
@@ -99,7 +99,7 @@ class _AccountInfoViewState extends State<AccountInfoView> {
             editButton: IconButton(
               onPressed: () {},
               icon: SvgPicture.asset(
-                'assets/images/editButton.svg',
+                'assets/icons/user_info/editButton.svg',
                 width: 19.5,
                 height: 19.5,
               ),
@@ -113,10 +113,10 @@ class _AccountInfoViewState extends State<AccountInfoView> {
               context.goNamed('contacts');
             },
             btnText: 'Связаться с нами',
-            btnIcon: const Icon(
-              Icons.support_agent,
-              color: AppColors.btnTextColor,
-              size: 30,
+            btnIcon: SvgPicture.asset(
+              'assets/icons/user_info/support.svg',
+              width: 30,
+              height: 30,
             ),
             fontSize: 16,
             btnHeight: 45,
@@ -133,19 +133,17 @@ class _AccountInfoViewState extends State<AccountInfoView> {
             children: [
               CustomButtonWithIcon(
                 onPressed: () async {
-                  final shouldLogout =
-                      await deleteAccountDialog(context, _password);
+                  final shouldLogout = await deleteAccountDialog(context, _password);
                   if (shouldLogout) {
-                    await AuthService.firebase()
-                        .deleteAccount(password: _password.text);
+                    await AuthService.firebase().deleteAccount(password: _password.text);
                     context.goNamed('login');
                   }
                 },
                 btnText: 'Удалить\nаккаунт',
-                btnIcon: const Icon(
-                  Icons.delete,
-                  color: AppColors.btnTextColor,
-                  size: 30,
+                btnIcon: SvgPicture.asset(
+                  'assets/icons/user_info/delete.svg',
+                  width: 30,
+                  height: 30,
                 ),
                 btnHeight: 45,
                 btnWidth: 114,
@@ -165,10 +163,10 @@ class _AccountInfoViewState extends State<AccountInfoView> {
                   }
                 },
                 btnText: 'Выйти из\nаккаунта',
-                btnIcon: const Icon(
-                  Icons.door_back_door,
-                  color: AppColors.btnTextColor,
-                  size: 30,
+                btnIcon: SvgPicture.asset(
+                  'assets/icons/user_info/exit.svg',
+                  width: 30,
+                  height: 30,
                 ),
                 btnHeight: 45,
                 btnWidth: 114,

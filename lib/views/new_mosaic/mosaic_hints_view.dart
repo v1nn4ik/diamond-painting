@@ -40,7 +40,7 @@ class MosaicHintsView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/card1.jpg',
+                'assets/images/tips/card1.jpg',
                 width: 150,
                 height: 150,
               ),
@@ -48,7 +48,7 @@ class MosaicHintsView extends StatelessWidget {
                 width: 24,
               ),
               Image.asset(
-                'assets/images/card2.jpg',
+                'assets/images/tips/card2.jpg',
                 width: 150,
                 height: 150,
               ),
@@ -61,7 +61,7 @@ class MosaicHintsView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/card3.jpg',
+                'assets/images/tips/card3.jpg',
                 width: 150,
                 height: 150,
               ),
@@ -69,7 +69,7 @@ class MosaicHintsView extends StatelessWidget {
                 width: 24,
               ),
               Image.asset(
-                'assets/images/card4.jpg',
+                'assets/images/tips/card4.jpg',
                 width: 150,
                 height: 150,
               ),

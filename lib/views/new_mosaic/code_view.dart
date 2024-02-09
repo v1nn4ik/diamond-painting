@@ -1,14 +1,29 @@
 import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CodeView extends StatelessWidget {
+class CodeView extends StatefulWidget {
   const CodeView({super.key});
 
   @override
+  State<CodeView> createState() => _CodeViewState();
+}
+
+class _CodeViewState extends State<CodeView> {
+  @override
   Widget build(BuildContext context) {
+    const FlutterSecureStorage storage = FlutterSecureStorage();
+    late final TextEditingController code = TextEditingController();
+
+    @override
+    void dispose() {
+      code.dispose();
+      super.dispose();
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.backgroundColor,
@@ -37,11 +52,13 @@ class CodeView extends StatelessWidget {
               child: Container(),
             ),
             TextFormField(
+              controller: code,
               textAlign: TextAlign.center,
               style: GoogleFonts.montserrat(
-                  fontSize: 20,
-                  color: AppColors.blueSmallText,
-                  fontWeight: FontWeight.w700),
+                fontSize: 20,
+                color: AppColors.blueSmallText,
+                fontWeight: FontWeight.w700,
+              ),
               decoration: InputDecoration(
                 constraints: const BoxConstraints(
                   maxHeight: 91,
@@ -77,7 +94,11 @@ class CodeView extends StatelessWidget {
             Flexible(
               flex: 2,
               child: CustomButton(
-                onPressed: () {
+                onPressed: () async {
+                  if (context.canPop()) {
+                    context.pop();
+                  }
+                  storage.write(key: 'code', value: code.text);
                   context.goNamed('Mosaic');
                 },
                 btnText: 'Далее',

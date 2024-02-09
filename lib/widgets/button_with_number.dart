@@ -19,11 +19,9 @@ class ButtonWithNumber extends StatelessWidget {
       padding: const EdgeInsets.only(left: 2, right: 10, bottom: 4),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          fixedSize: const Size(55, 55),
-          backgroundColor:
-              isFavorite ? AppColors.warEnableColor : AppColors.warDisableColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          fixedSize: const Size(55, 63),
+          backgroundColor: isFavorite ? AppColors.warEnableColor : AppColors.warDisableColor,
         ),
         onPressed: onTap,
         child: Text(

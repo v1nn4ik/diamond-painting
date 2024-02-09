@@ -1,5 +1,6 @@
 import 'package:diamond_painting/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomButtonWithIcon extends StatelessWidget {
@@ -11,7 +12,7 @@ class CustomButtonWithIcon extends StatelessWidget {
   final Color? btnTextColor;
   final double? fontSize;
   final double? borderRadius;
-  final Icon? btnIcon;
+  final SvgPicture? btnIcon;
   final FontWeight? fontWeight;
   const CustomButtonWithIcon({
     super.key,

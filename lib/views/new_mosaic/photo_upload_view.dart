@@ -50,8 +50,7 @@ class _PhotoUploadViewState extends State<PhotoUploadView> {
               String? imagePath;
               String? mosaicPhotoUrl;
 
-              XFile? imagePicker =
-                  await ImagePicker().pickImage(source: ImageSource.gallery);
+              XFile? imagePicker = await ImagePicker().pickImage(source: ImageSource.gallery);
               if (imagePicker != null) {
                 setState(() {
                   imagePath = imagePicker.path;
@@ -66,7 +65,7 @@ class _PhotoUploadViewState extends State<PhotoUploadView> {
               var formData = FormData();
               formData.files.add(MapEntry('img', file));
               Response response = await dio.post(
-                'http://127.0.0.1:8000/mosaic',
+                'http://10.0.2.2:8000/mosaic',
                 data: formData,
               );
               setState(() {

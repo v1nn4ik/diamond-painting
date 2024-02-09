@@ -1,6 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:diamond_painting/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 class MainWrapper extends StatefulWidget {
@@ -34,28 +35,28 @@ class _MainWrapperState extends State<MainWrapper> {
         child: widget.navigationShell,
       ),
       bottomNavigationBar: CurvedNavigationBar(
-        items: const <Widget>[
-          Icon(
-            Icons.apps,
-            color: AppColors.btnTextColor,
+        items: <Widget>[
+          SvgPicture.asset(
+            'assets/icons/navigation_bar/works.svg',
           ),
-          Icon(
-            Icons.diamond_outlined,
-            color: AppColors.btnTextColor,
+          SvgPicture.asset(
+            'assets/icons/navigation_bar/diamond.svg',
           ),
-          Icon(
-            Icons.account_circle_outlined,
-            color: AppColors.btnTextColor,
-          )
+          SvgPicture.asset(
+            'assets/icons/navigation_bar/person.svg',
+          ),
         ],
         index: 0,
-        height: 65,
+        height: 55,
         color: AppColors.btnBackgroundColor,
         buttonBackgroundColor: AppColors.btnBackgroundColor,
         backgroundColor: AppColors.backgroundColor,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 200),
         onTap: (int index) {
+          if (context.canPop()) {
+            context.pop();
+          }
           setState(() {
             selectedIndex = index;
           });

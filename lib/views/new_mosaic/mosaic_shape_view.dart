@@ -1,6 +1,7 @@
 import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/custom_button_with_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +11,8 @@ class MosaicShapeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const FlutterSecureStorage storage = FlutterSecureStorage();
+
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
@@ -39,11 +42,12 @@ class MosaicShapeView extends StatelessWidget {
             ),
             CustomButtomWithImage(
               onPressed: () {
+                storage.write(key: 'shape', value: 'square');
                 context.goNamed('mosaicSize');
               },
               btnText: 'Квадратная',
               btnSvgImage: SvgPicture.asset(
-                'assets/images/squareDiamond.svg',
+                'assets/icons/mosaic_settings/squareDiamond.svg',
                 width: 60,
                 height: 60,
               ),
@@ -53,11 +57,12 @@ class MosaicShapeView extends StatelessWidget {
             ),
             CustomButtomWithImage(
               onPressed: () {
+                storage.write(key: 'shape', value: 'circle');
                 context.goNamed('mosaicSize');
               },
               btnText: 'Круглая',
               btnSvgImage: SvgPicture.asset(
-                'assets/images/circleDiamond.svg',
+                'assets/icons/mosaic_settings/circleDiamond.svg',
                 width: 50,
                 height: 50,
               ),

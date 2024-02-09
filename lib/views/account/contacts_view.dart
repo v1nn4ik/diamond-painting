@@ -18,24 +18,26 @@ class _ContactsViewState extends State<ContactsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: AppColors.backgroundColor,
-        automaticallyImplyLeading: false,
-        titleTextStyle: GoogleFonts.montserrat(
-          color: AppColors.btnTextColor,
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-        ),
-        title: const Text('Наши контакты'),
-      ),
       body: Center(
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 48, right: 48, top: 60),
+              child: Text(
+                'Наши контакты',
+                style: GoogleFonts.montserrat(
+                  color: AppColors.btnTextColor,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
             const SizedBox(
               height: 48,
             ),
             CustomFieldWithIcon(
-              fieldImage: SvgPicture.asset('assets/images/email.svg'),
+              fieldImage: SvgPicture.asset('assets/icons/user_info/email.svg'),
               textTitle: 'Почта',
               text: 'DSupport@yandex.ru',
             ),
@@ -43,7 +45,7 @@ class _ContactsViewState extends State<ContactsView> {
               height: 32,
             ),
             CustomFieldWithIcon(
-              fieldImage: SvgPicture.asset('assets/images/tg.svg'),
+              fieldImage: SvgPicture.asset('assets/icons/social_media/tg.svg'),
               textTitle: 'Телеграм',
               text: '@DSupport                  ',
             ),
@@ -51,7 +53,7 @@ class _ContactsViewState extends State<ContactsView> {
               height: 32,
             ),
             CustomFieldWithIcon(
-              fieldImage: SvgPicture.asset('assets/images/vk.svg'),
+              fieldImage: SvgPicture.asset('assets/icons/social_media/vk.svg'),
               textTitle: 'Вконтакте',
               text: '@DSupport                  ',
             ),
@@ -59,13 +61,13 @@ class _ContactsViewState extends State<ContactsView> {
               height: 32,
             ),
             CustomButtonWithIcon(
-              onPressed: () => context.pop(),
+              onPressed: () => context.goNamed('info'),
               btnText: 'Вернуться к аккаунту',
-              btnIcon: const Icon(
-                Icons.undo,
-                color: AppColors.btnTextColor,
-                size: 30,
-              ),
+              btnIcon: SvgPicture.asset(
+                  'assets/icons/user_info/back.svg',
+                  width: 30,
+                  height: 30,
+                ),
               fontSize: 16,
               btnHeight: 45,
               btnWidth: 252,
@@ -76,7 +78,7 @@ class _ContactsViewState extends State<ContactsView> {
             const SizedBox(
               height: 32,
             ),
-            SvgPicture.asset('assets/images/logo.svg')
+            SvgPicture.asset('assets/icons/logo.svg')
           ],
         ),
       ),

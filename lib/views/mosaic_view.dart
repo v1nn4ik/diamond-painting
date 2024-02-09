@@ -6,6 +6,7 @@ import 'package:diamond_painting/widgets/button_with_number.dart';
 import 'package:diamond_painting/widgets/instruction.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,6 +20,8 @@ class MosaicView extends StatefulWidget {
 }
 
 class _MosaicViewState extends State<MosaicView> {
+  int currentIndex = 1;
+
   @override
   void initState() {
     super.initState();
@@ -47,70 +50,78 @@ class _MosaicViewState extends State<MosaicView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset('assets/images/logo.svg'),
+                SvgPicture.asset('assets/icons/logo.svg'),
                 const SizedBox(
                   width: 64,
                 ),
-                _progressBarActive
-                    ? const SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: CircularProgressIndicator(
-                          color: AppColors.warEnableColor,
-                          strokeWidth: 5,
+                SizedBox(
+                  width: 72,
+                  height: 72,
+                  child: _progressBarActive
+                      ? Container(
+                          child: Lottie.asset(
+                            'assets/loading.json',
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : Container(
+                          margin: const EdgeInsets.all(10),
+                          child: FloatingActionButton(
+                            onPressed: () async {
+                              setState(() {
+                                _progressBarActive = true;
+                              });
+
+                              _permissionReady = await _checkPermission();
+                              if (_permissionReady) {
+                                const FlutterSecureStorage storage = FlutterSecureStorage();
+
+                                Dio dio = Dio();
+                                MultipartFile file = await MultipartFile.fromFile(
+                                  await storage.read(key: 'photo') ?? '',
+                                  filename: 'image',
+                                );
+                                var formData = FormData();
+                                formData.files.add(MapEntry('img', file));
+                                Response response = await dio.post(
+                                  'http://10.0.2.2:8000/mosaic/manual',
+                                  data: formData,
+                                );
+
+                                await _prepareSaveDir();
+                                String instructionUrl = response.data.toString();
+                                await Dio().download(
+                                  instructionUrl,
+                                  "$_localPath/Инструкция.pdf",
+                                );
+
+                                storage.write(key: 'mosaicInstruction', value: instructionUrl);
+
+                                setState(() {
+                                  _progressBarActive = false;
+                                });
+                              }
+                            },
+                            backgroundColor: AppColors.warEnableColor,
+                            elevation: 2,
+                            shape: const CircleBorder(),
+                            child: SvgPicture.asset(
+                              'assets/icons/mosaic/download.svg',
+                              width: 40,
+                              height: 40,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                      )
-                    : FloatingActionButton(
-                        onPressed: () async {
-                          setState(() {
-                            _progressBarActive = true;
-                          });
-                          _permissionReady = await _checkPermission();
-                          if (_permissionReady) {
-                            const FlutterSecureStorage storage =
-                                FlutterSecureStorage();
-
-                            Dio dio = Dio();
-                            MultipartFile file = await MultipartFile.fromFile(
-                              await storage.read(key: 'photo') ?? '',
-                              filename: 'image',
-                            );
-                            var formData = FormData();
-                            formData.files.add(MapEntry('img', file));
-                            Response response = await dio.post(
-                              'http://127.0.0.1:8000/mosaic/manual',
-                              data: formData,
-                            );
-
-                            await _prepareSaveDir();
-                            String instructionUrl = response.data.toString();
-                            await Dio().download(
-                              instructionUrl,
-                              "$_localPath/Инструкция.pdf",
-                            );
-
-                            storage.write(
-                                key: 'mosaicInstruction',
-                                value: instructionUrl);
-
-                            setState(() {
-                              _progressBarActive = false;
-                            });
-                          }
-                        },
-                        backgroundColor: AppColors.warEnableColor,
-                        elevation: 2,
-                        shape: const CircleBorder(),
-                        child: const Icon(
-                          Icons.file_download_rounded,
-                          size: 40,
-                          color: Colors.white,
-                        ),
-                      ),
+                ),
               ],
             ),
           ),
-          const Instruction(),
+          Instruction(
+            width: 12,
+            height: 13,
+            value: currentIndex.toString(),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 8, top: 33),
             child: SingleChildScrollView(
@@ -120,7 +131,10 @@ class _MosaicViewState extends State<MosaicView> {
                     for (int i = 1; i <= 8; i++)
                       ButtonWithNumber(
                         number: i,
-                        onTap: () {},
+                        isFavorite: i == 1 ? true : false,
+                        onTap: () {
+                          buttonClicked(i);
+                        },
                       ),
                   ],
                 )),
@@ -163,5 +177,11 @@ class _MosaicViewState extends State<MosaicView> {
       var directory = await getApplicationDocumentsDirectory();
       return directory.path + Platform.pathSeparator;
     }
+  }
+
+  void buttonClicked(int number) {
+    setState(() {
+      currentIndex = number;
+    });
   }
 }

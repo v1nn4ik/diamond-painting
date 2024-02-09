@@ -1,6 +1,7 @@
 import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/custom_button_with_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +11,8 @@ class MosaicSizeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const FlutterSecureStorage storage = FlutterSecureStorage();
+
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
@@ -39,11 +42,12 @@ class MosaicSizeView extends StatelessWidget {
             ),
             CustomButtomWithImage(
               onPressed: () {
+                storage.write(key: 'size', value: 'a2');
                 context.goNamed('mosaicHints');
               },
               btnText: 'A2',
               btnSvgImage: SvgPicture.asset(
-                'assets/images/a2.svg',
+                'assets/icons/mosaic_settings/format.svg',
                 width: 63,
                 height: 90,
               ),
@@ -54,11 +58,12 @@ class MosaicSizeView extends StatelessWidget {
             ),
             CustomButtomWithImage(
               onPressed: () {
+                storage.write(key: 'size', value: 'a3');
                 context.goNamed('mosaicHints');
               },
               btnText: 'A3',
               btnSvgImage: SvgPicture.asset(
-                'assets/images/a2.svg',
+                'assets/icons/mosaic_settings/format.svg',
                 width: 45,
                 height: 64,
               ),
@@ -70,11 +75,12 @@ class MosaicSizeView extends StatelessWidget {
             ),
             CustomButtomWithImage(
               onPressed: () {
+                storage.write(key: 'size', value: 'a4');
                 context.goNamed('mosaicHints');
               },
               btnText: 'A4',
               btnSvgImage: SvgPicture.asset(
-                'assets/images/a2.svg',
+                'assets/icons/mosaic_settings/format.svg',
                 width: 32,
                 height: 46,
               ),

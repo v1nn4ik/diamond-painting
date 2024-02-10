@@ -13,19 +13,21 @@ class Cell extends StatelessWidget {
   final double? textSize;
   final Color? textColor;
   final TextAlign? textAlign;
+  final double? shape;
   const Cell({
     super.key,
     this.paddingRight = 4,
     this.paddingLeft = 0,
     this.paddingTop = 0,
-    this.paddingBottom = 0,
+    this.paddingBottom = 4,
     this.textSize = 14,
     this.textColor = Colors.black,
-    this.color = Colors.transparent,
+    this.color = Colors.white,
     required this.text,
     this.textAlign = TextAlign.center,
     this.width = 20,
     this.height = 20,
+    this.shape = 5,
   });
 
   @override
@@ -42,7 +44,7 @@ class Cell extends StatelessWidget {
         height: height,
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
+            borderRadius: BorderRadius.all(Radius.circular(shape!)),
             color: color,
           ),
           child: Text(

@@ -51,6 +51,13 @@ dependencies:
   permission_handler: ^11.1.0
   path_provider: ^2.1.2
   lottie: ^3.0.0
+  image_cropper: ^5.0.1
+
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+  color: "#F0F8FA"
 
 dev_dependencies:
   flutter_test:

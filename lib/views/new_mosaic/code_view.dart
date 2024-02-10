@@ -99,6 +99,7 @@ class _CodeViewState extends State<CodeView> {
                     context.pop();
                   }
                   storage.write(key: 'code', value: code.text);
+                  storage.write(key: 'hasMosaic', value: 'true');
                   context.goNamed('Mosaic');
                 },
                 btnText: 'Далее',

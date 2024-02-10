@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PhotoUploadView extends StatefulWidget {
@@ -54,6 +55,26 @@ class _PhotoUploadViewState extends State<PhotoUploadView> {
               if (imagePicker != null) {
                 setState(() {
                   imagePath = imagePicker.path;
+                });
+              }
+              CroppedFile? croppedFile = await ImageCropper().cropImage(
+                  sourcePath: imagePath!,
+                  aspectRatio: const CropAspectRatio(ratioX: 9, ratioY: 14),
+                  uiSettings: [
+                    AndroidUiSettings(
+                      toolbarTitle: 'Отредактируйте фото',
+                      backgroundColor: AppColors.backgroundColor,
+                      toolbarColor: AppColors.backgroundColor,
+                      toolbarWidgetColor: AppColors.btnTextColor,
+                      activeControlsWidgetColor: AppColors.btnTextColor,
+                      showCropGrid: false,
+                      lockAspectRatio: true,
+                    ),
+                    IOSUiSettings(title: 'Отредактируйте фото'),
+                  ]);
+              if (croppedFile != null) {
+                setState(() {
+                  imagePath = croppedFile.path;
                 });
               }
 

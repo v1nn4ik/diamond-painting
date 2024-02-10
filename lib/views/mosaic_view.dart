@@ -20,7 +20,17 @@ class MosaicView extends StatefulWidget {
 }
 
 class _MosaicViewState extends State<MosaicView> {
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
   int currentIndex = 1;
+
+  late String _localPath;
+  late bool _permissionReady;
+  late TargetPlatform? platform;
+  bool _progressBarActive = false;
+
+  String color = 'bw';
+  String shape = 'square';
+  String size = 'a2';
 
   @override
   void initState() {
@@ -31,11 +41,6 @@ class _MosaicViewState extends State<MosaicView> {
       platform = TargetPlatform.iOS;
     }
   }
-
-  late String _localPath;
-  late bool _permissionReady;
-  late TargetPlatform? platform;
-  bool _progressBarActive = false;
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +79,6 @@ class _MosaicViewState extends State<MosaicView> {
 
                               _permissionReady = await _checkPermission();
                               if (_permissionReady) {
-                                const FlutterSecureStorage storage = FlutterSecureStorage();
-
                                 Dio dio = Dio();
                                 MultipartFile file = await MultipartFile.fromFile(
                                   await storage.read(key: 'photo') ?? '',
@@ -92,9 +95,8 @@ class _MosaicViewState extends State<MosaicView> {
                                 String instructionUrl = response.data.toString();
                                 await Dio().download(
                                   instructionUrl,
-                                  "$_localPath/Инструкция.pdf",
+                                  "$_localPath/Инструкция1.pdf",
                                 );
-
                                 storage.write(key: 'mosaicInstruction', value: instructionUrl);
 
                                 setState(() {
@@ -117,11 +119,7 @@ class _MosaicViewState extends State<MosaicView> {
               ],
             ),
           ),
-          Instruction(
-            width: 12,
-            height: 13,
-            value: currentIndex.toString(),
-          ),
+          const Instruction(),
           Padding(
             padding: const EdgeInsets.only(left: 8, top: 33),
             child: SingleChildScrollView(

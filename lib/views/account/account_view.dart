@@ -14,15 +14,16 @@ class AccountView extends StatefulWidget {
 class _AccountViewState extends State<AccountView> {
   @override
   Widget build(BuildContext context) {
-    final user = AuthService.firebase().currentUser;
-    if (user != null) {
-      if (user.isEmailVerified) {
-        return const AccountInfoView();
-      } else {
-        return const VerifyEmailView();
-      }
-    } else {
-      return const LoginView();
-    }
+    return const AccountInfoView();
+    // final user = AuthService.firebase().currentUser;
+    // if (user != null) {
+    //   if (user.isEmailVerified) {
+    //     return const AccountInfoView();
+    //   } else {
+    //     return const VerifyEmailView();
+    //   }
+    // } else {
+    //   return const LoginView();
+    // }
   }
 }

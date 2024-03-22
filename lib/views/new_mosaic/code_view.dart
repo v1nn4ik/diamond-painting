@@ -98,8 +98,11 @@ class _CodeViewState extends State<CodeView> {
                   if (context.canPop()) {
                     context.pop();
                   }
+
                   storage.write(key: 'code', value: code.text);
                   storage.write(key: 'hasMosaic', value: 'true');
+                  storage.write(key: 'isNew', value: 'true');
+
                   context.goNamed('Mosaic');
                 },
                 btnText: 'Далее',

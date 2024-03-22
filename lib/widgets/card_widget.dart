@@ -19,41 +19,45 @@ class CardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: AppColors.warEnableTextColor,
+      color: AppColors.backgroundColor,
       elevation: 3,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
       ),
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(borderRadius!),
-            child: Image.asset(
-              cardImageUrl,
-              height: 210,
-              width: 150,
-              fit: BoxFit.fill,
+      child: SizedBox(
+        width: 150,
+        height: 237,
+        child: Column(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(borderRadius!),
+              child: Image.asset(
+                cardImageUrl,
+                height: 210,
+                width: 150,
+                fit: BoxFit.fill,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4, bottom: 4),
-            child: Row(
-              children: [
-                diamondTypeCircle
-                    ? SvgPicture.asset('assets/images/circleDiamond.svg')
-                    : SvgPicture.asset('assets/images/squareDiamond.svg'),
-                const SizedBox(
-                  width: 4,
-                ),
-                Text(
-                  mosaicSize,
-                  style: GoogleFonts.montserrat(
-                      fontSize: 13, fontWeight: FontWeight.w300),
-                )
-              ],
+            Padding(
+              padding: const EdgeInsets.only(top: 4, bottom: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  diamondTypeCircle
+                      ? SvgPicture.asset('assets/icons/mosaic_settings/circleDiamond.svg')
+                      : SvgPicture.asset('assets/icons/mosaic_settings/squareDiamond.svg'),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  Text(
+                    mosaicSize,
+                    style: GoogleFonts.montserrat(fontSize: 13, fontWeight: FontWeight.w300),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -21,15 +21,12 @@ import 'package:go_router/go_router.dart';
 class AppNavigation {
   AppNavigation._();
 
-  static String initial = '/worksRecomendations';
+  static String initial = '/mosaic';
 
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
-  static final _shellNavigatorMosaic =
-      GlobalKey<NavigatorState>(debugLabel: 'shellMosaic');
-  static final _shellNavigatorMyWorks =
-      GlobalKey<NavigatorState>(debugLabel: 'shellMyWorks');
-  static final _shellNavigatorAccount =
-      GlobalKey<NavigatorState>(debugLabel: 'shellAccount');
+  static final _shellNavigatorMosaic = GlobalKey<NavigatorState>(debugLabel: 'shellMosaic');
+  static final _shellNavigatorMyWorks = GlobalKey<NavigatorState>(debugLabel: 'shellMyWorks');
+  static final _shellNavigatorAccount = GlobalKey<NavigatorState>(debugLabel: 'shellAccount');
 
   static final GoRouter router = GoRouter(
     initialLocation: initial,
@@ -50,80 +47,9 @@ class AppNavigation {
               GoRoute(
                 path: '/worksRecomendations',
                 name: 'WorksRecomendations',
-                builder: (BuildContext context, GoRouterState state) =>
-                    const WorksRecView(),
-                routes: [
-                  GoRoute(
-                    path: 'mosaicColor',
-                    name: 'mosaicColor',
-                    pageBuilder: (context, state) {
-                      return buildPageWithDefaultTransition(
-                          context: context,
-                          state: state,
-                          child: const MosaicColorView());
-                    },
-                  ),
-                  GoRoute(
-                    path: 'mosaicShape',
-                    name: 'mosaicShape',
-                    pageBuilder: (context, state) {
-                      return buildPageWithDefaultTransition(
-                          context: context,
-                          state: state,
-                          child: const MosaicShapeView());
-                    },
-                  ),
-                  GoRoute(
-                    path: 'mosaicSize',
-                    name: 'mosaicSize',
-                    pageBuilder: (context, state) {
-                      return buildPageWithDefaultTransition(
-                          context: context,
-                          state: state,
-                          child: const MosaicSizeView());
-                    },
-                  ),
-                  GoRoute(
-                    path: 'mosaicHints',
-                    name: 'mosaicHints',
-                    pageBuilder: (context, state) {
-                      return buildPageWithDefaultTransition(
-                          context: context,
-                          state: state,
-                          child: const MosaicHintsView());
-                    },
-                  ),
-                  GoRoute(
-                    path: 'photoUpload',
-                    name: 'photoUpload',
-                    pageBuilder: (context, state) {
-                      return buildPageWithDefaultTransition(
-                          context: context,
-                          state: state,
-                          child: const PhotoUploadView());
-                    },
-                  ),
-                  GoRoute(
-                    path: 'photoSelection',
-                    name: 'photoSelection',
-                    pageBuilder: (context, state) {
-                      return buildPageWithDefaultTransition(
-                          context: context,
-                          state: state,
-                          child: const PhotoSelectionView());
-                    },
-                  ),
-                  GoRoute(
-                    path: 'code',
-                    name: 'code',
-                    pageBuilder: (context, state) {
-                      return buildPageWithDefaultTransition(
-                          context: context,
-                          state: state,
-                          child: const CodeView());
-                    },
-                  ),
-                ],
+                builder: (BuildContext context, GoRouterState state) {
+                  return const WorksRecView();
+                },
               )
             ],
           ),
@@ -134,8 +60,64 @@ class AppNavigation {
               GoRoute(
                 path: '/mosaic',
                 name: 'Mosaic',
-                builder: (BuildContext context, GoRouterState state) =>
-                    const MosaicView(),
+                builder: (BuildContext context, GoRouterState state) => const MosaicView(),
+                routes: [
+                  GoRoute(
+                    path: 'mosaicColor',
+                    name: 'mosaicColor',
+                    pageBuilder: (context, state) {
+                      return buildPageWithDefaultTransition(
+                          context: context, state: state, child: const MosaicColorView().build(context));
+                    },
+                  ),
+                  GoRoute(
+                    path: 'mosaicShape',
+                    name: 'mosaicShape',
+                    pageBuilder: (context, state) {
+                      return buildPageWithDefaultTransition(
+                          context: context, state: state, child: const MosaicShapeView());
+                    },
+                  ),
+                  GoRoute(
+                    path: 'mosaicSize',
+                    name: 'mosaicSize',
+                    pageBuilder: (context, state) {
+                      return buildPageWithDefaultTransition(
+                          context: context, state: state, child: const MosaicSizeView());
+                    },
+                  ),
+                  GoRoute(
+                    path: 'mosaicHints',
+                    name: 'mosaicHints',
+                    pageBuilder: (context, state) {
+                      return buildPageWithDefaultTransition(
+                          context: context, state: state, child: const MosaicHintsView());
+                    },
+                  ),
+                  GoRoute(
+                    path: 'photoUpload',
+                    name: 'photoUpload',
+                    pageBuilder: (context, state) {
+                      return buildPageWithDefaultTransition(
+                          context: context, state: state, child: const PhotoUploadView());
+                    },
+                  ),
+                  GoRoute(
+                    path: 'photoSelection',
+                    name: 'photoSelection',
+                    pageBuilder: (context, state) {
+                      return buildPageWithDefaultTransition(
+                          context: context, state: state, child: const PhotoSelectionView());
+                    },
+                  ),
+                  GoRoute(
+                    path: 'code',
+                    name: 'code',
+                    pageBuilder: (context, state) {
+                      return buildPageWithDefaultTransition(context: context, state: state, child: const CodeView());
+                    },
+                  ),
+                ],
               )
             ],
           ),
@@ -146,27 +128,21 @@ class AppNavigation {
               GoRoute(
                 path: '/account',
                 name: 'Account',
-                builder: (BuildContext context, GoRouterState state) =>
-                    const AccountView(),
+                builder: (BuildContext context, GoRouterState state) => const AccountView(),
                 routes: [
                   GoRoute(
                     path: 'info',
                     name: 'info',
                     pageBuilder: (context, state) {
                       return buildPageWithDefaultTransition(
-                          context: context,
-                          state: state,
-                          child: const AccountInfoView());
+                          context: context, state: state, child: const AccountInfoView());
                     },
                   ),
                   GoRoute(
                     path: 'login',
                     name: 'login',
                     pageBuilder: (context, state) {
-                      return buildPageWithDefaultTransition(
-                          context: context,
-                          state: state,
-                          child: const LoginView());
+                      return buildPageWithDefaultTransition(context: context, state: state, child: const LoginView());
                     },
                   ),
                   GoRoute(
@@ -174,9 +150,7 @@ class AppNavigation {
                     name: 'register',
                     pageBuilder: (context, state) {
                       return buildPageWithDefaultTransition(
-                          context: context,
-                          state: state,
-                          child: const RegisterView());
+                          context: context, state: state, child: const RegisterView());
                     },
                   ),
                   GoRoute(
@@ -184,9 +158,7 @@ class AppNavigation {
                     name: 'verifyEmail',
                     pageBuilder: (context, state) {
                       return buildPageWithDefaultTransition(
-                          context: context,
-                          state: state,
-                          child: const VerifyEmailView());
+                          context: context, state: state, child: const VerifyEmailView());
                     },
                   ),
                   GoRoute(
@@ -194,9 +166,7 @@ class AppNavigation {
                     name: 'contacts',
                     pageBuilder: (context, state) {
                       return buildPageWithDefaultTransition(
-                          context: context,
-                          state: state,
-                          child: const ContactsView());
+                          context: context, state: state, child: const ContactsView());
                     },
                   ),
                 ],

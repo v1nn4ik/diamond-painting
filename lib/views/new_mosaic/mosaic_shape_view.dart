@@ -43,6 +43,7 @@ class MosaicShapeView extends StatelessWidget {
             CustomButtomWithImage(
               onPressed: () {
                 storage.write(key: 'shape', value: 'square');
+                print('square');
                 context.goNamed('mosaicSize');
               },
               btnText: 'Квадратная',
@@ -58,6 +59,7 @@ class MosaicShapeView extends StatelessWidget {
             CustomButtomWithImage(
               onPressed: () {
                 storage.write(key: 'shape', value: 'circle');
+                print('circle');
                 context.goNamed('mosaicSize');
               },
               btnText: 'Круглая',

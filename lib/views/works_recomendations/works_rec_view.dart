@@ -30,7 +30,7 @@ class _WorksRecViewState extends State<WorksRecView> {
     const CardWidget(
       cardImageUrl: 'assets/images/image1.jpg',
       mosaicSize: 'A4',
-      diamondTypeCircle: false,
+      diamondTypeCircle: true,
     ),
   ];
 
@@ -98,26 +98,24 @@ class _WorksRecViewState extends State<WorksRecView> {
             ),
           ),
           hasMosaic == true
-              ? const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              ? Column(
                   children: [
-                    CardWidget(
-                      cardImageUrl: 'assets/images/image1.jpg',
-                      mosaicSize: 'A4',
-                      diamondTypeCircle: false,
+                    Center(
+                      child: Wrap(
+                        spacing: 32,
+                        runSpacing: 32,
+                        children: [
+                          cards[0],
+                          cards[1],
+                          cards[1],
+                          cards[1],
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      width: 32,
-                    ),
-                    CardWidget(
-                      cardImageUrl: 'assets/images/image1.jpg',
-                      mosaicSize: 'A3',
-                      diamondTypeCircle: true,
-                    )
                   ],
                 )
               : Text(
-                  'Нажмите “+” чтобы начать',
+                  'Нет активных работ :(',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
                     color: AppColors.btnTextColor,
@@ -127,21 +125,26 @@ class _WorksRecViewState extends State<WorksRecView> {
                 ),
         ],
       ),
-      floatingActionButton: SizedBox(
-        width: 48,
-        height: 48,
-        child: FloatingActionButton(
-          shape: const CircleBorder(),
-          onPressed: () {
-            context.goNamed('mosaicColor');
-          },
-          backgroundColor: AppColors.warEnableColor,
-          child: const Icon(
-            Icons.add,
-            color: AppColors.warEnableTextColor,
-          ),
-        ),
-      ),
+      floatingActionButton: hasMosaic == true
+          ? SizedBox(
+              width: 48,
+              height: 48,
+              child: FloatingActionButton(
+                shape: const CircleBorder(),
+                onPressed: () {
+                  context.goNamed('mosaicColor');
+                },
+                backgroundColor: AppColors.warEnableColor,
+                child: const Icon(
+                  Icons.add,
+                  color: AppColors.warEnableTextColor,
+                ),
+              ),
+            )
+          : const SizedBox(
+              width: 48,
+              height: 48,
+            ),
     );
   }
 }

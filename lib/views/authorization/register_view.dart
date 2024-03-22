@@ -85,34 +85,34 @@ class _RegisterViewState extends State<RegisterView> {
               onPressed: () async {
                 final email = _email.text;
                 final password = _password.text;
-                try {
-                  await AuthService.firebase().createUser(
-                    email: email,
-                    password: password,
-                  );
-                  AuthService.firebase().sendEmailVerification();
-                  context.goNamed('verifyEmail');
-                } on WeakPasswordAuthException {
-                  await showErrorDialog(
-                    context,
-                    'Пароль должен содержать минимум 6 символов',
-                  );
-                } on InvalidEmailRegAuthException {
-                  await showErrorDialog(
-                    context,
-                    'Некорректный адрес эл. почты',
-                  );
-                } on EmailAlredyInUseAuthException {
-                  await showErrorDialog(
-                    context,
-                    'Пользователь с таким адресом эл. почты уже существует',
-                  );
-                } on GenericAuthException {
-                  await showErrorDialog(
-                    context,
-                    'Ошибка регистрации',
-                  );
-                }
+                // try {
+                //   await AuthService.firebase().createUser(
+                //     email: email,
+                //     password: password,
+                //   );
+                //   // AuthService.firebase().sendEmailVerification();
+                //   context.goNamed('verifyEmail');
+                // } on WeakPasswordAuthException {
+                //   await showErrorDialog(
+                //     context,
+                //     'Пароль должен содержать минимум 6 символов',
+                //   );
+                // } on InvalidEmailRegAuthException {
+                //   await showErrorDialog(
+                //     context,
+                //     'Некорректный адрес эл. почты',
+                //   );
+                // } on EmailAlredyInUseAuthException {
+                //   await showErrorDialog(
+                //     context,
+                //     'Пользователь с таким адресом эл. почты уже существует',
+                //   );
+                // } on GenericAuthException {
+                //   await showErrorDialog(
+                //     context,
+                //     'Ошибка регистрации',
+                //   );
+                // }
               },
               btnText: 'Зарегистрироваться',
             ),

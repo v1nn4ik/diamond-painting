@@ -1,9 +1,9 @@
 import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/custom_button.dart';
 import 'package:dio/dio.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -49,7 +49,6 @@ class _PhotoUploadViewState extends State<PhotoUploadView> {
               const FlutterSecureStorage storage = FlutterSecureStorage();
 
               String? imagePath;
-              String? mosaicPhotoUrl;
 
               XFile? imagePicker = await ImagePicker().pickImage(source: ImageSource.gallery);
               if (imagePicker != null) {
@@ -78,23 +77,37 @@ class _PhotoUploadViewState extends State<PhotoUploadView> {
                 });
               }
 
+              String? canvasFormat = await storage.read(key: 'size');
+              String? palette = await storage.read(key: 'color');
+
               Dio dio = Dio();
+
+              Response loginResponse = await dio.post(
+                'http://10.0.2.2:1323/api/v1/auth/login',
+                data: {
+                  'login': 'test@test.com',
+                  'password': 'test',
+                },
+              );
+
+              storage.write(key: 'accessToken', value: 'Bearer ${loginResponse.data['access_token']}');
+
               MultipartFile file = await MultipartFile.fromFile(
                 imagePath!,
                 filename: 'image',
               );
               var formData = FormData();
               formData.files.add(MapEntry('img', file));
-              Response response = await dio.post(
-                'http://10.0.2.2:8000/mosaic',
+              formData.fields.add(MapEntry('canvasFormat', canvasFormat!.toUpperCase()));
+              formData.fields.add(MapEntry('palette', palette!));
+              var response = await dio.post(
+                'http://10.0.2.2:1323/api/v1/mosaic/demo/upload',
                 data: formData,
               );
-              setState(() {
-                mosaicPhotoUrl = response.data.toString();
-              });
-
-              storage.write(key: 'mosaic', value: mosaicPhotoUrl!);
-              storage.write(key: 'photo', value: imagePath!);
+              
+              storage.write(key: 'photo', value: imagePath);
+              storage.write(key: 'imgId', value: response.data['imgId']);
+              storage.write(key: 'ownerId', value: response.data['ownerId']);
 
               context.goNamed('photoSelection');
             },

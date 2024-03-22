@@ -17,23 +17,10 @@ class MainWrapper extends StatefulWidget {
 }
 
 class _MainWrapperState extends State<MainWrapper> {
-  int selectedIndex = 0;
-
-  void _goBranch(int index) {
-    widget.navigationShell.goBranch(
-      index,
-      initialLocation: index == widget.navigationShell.currentIndex,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child: widget.navigationShell,
-      ),
+      body: widget.navigationShell,
       bottomNavigationBar: CurvedNavigationBar(
         items: <Widget>[
           SvgPicture.asset(
@@ -46,23 +33,23 @@ class _MainWrapperState extends State<MainWrapper> {
             'assets/icons/navigation_bar/person.svg',
           ),
         ],
-        index: 0,
+        index: widget.navigationShell.currentIndex,
         height: 55,
         color: AppColors.btnBackgroundColor,
         buttonBackgroundColor: AppColors.btnBackgroundColor,
         backgroundColor: AppColors.backgroundColor,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 200),
-        onTap: (int index) {
-          if (context.canPop()) {
-            context.pop();
-          }
-          setState(() {
-            selectedIndex = index;
-          });
-          _goBranch(selectedIndex);
-        },
+        onTap: (int index) => _onTap(context, index),
       ),
+    );
+  }
+
+  void _onTap(BuildContext context, int index) {
+    
+    widget.navigationShell.goBranch(
+      index,
+      initialLocation: index == widget.navigationShell.currentIndex,
     );
   }
 }

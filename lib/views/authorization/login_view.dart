@@ -85,38 +85,38 @@ class _LoginViewState extends State<LoginView> {
               onPressed: () async {
                 final email = _email.text;
                 final password = _password.text;
-                try {
-                  await AuthService.firebase().logIn(
-                    email: email,
-                    password: password,
-                  );
-                  final user = AuthService.firebase().currentUser;
-                  if (user?.isEmailVerified ?? false) {
-                    context.goNamed('info');
-                  } else {
-                    context.goNamed('verifyEmail');
-                  }
-                } on InvalidLoginCredentialsAuthException {
-                  await showErrorDialog(
-                    context,
-                    'Неправильный адрес эл. почты или пароль',
-                  );
-                } on InvalidEmailAuthException {
-                  await showErrorDialog(
-                    context,
-                    'Неверный формат эл. почты',
-                  );
-                } on WrongPasswordAuthException {
-                  await showErrorDialog(
-                    context,
-                    'Неправильный пароль',
-                  );
-                } on GenericAuthException {
-                  await showErrorDialog(
-                    context,
-                    'Ошибка аутоидентификации',
-                  );
-                }
+                // try {
+                //   await AuthService.firebase().logIn(
+                //     email: email,
+                //     password: password,
+                //   );
+                //   final user = AuthService.firebase().currentUser;
+                //   if (user?.isEmailVerified ?? false) {
+                //     context.goNamed('info');
+                //   } else {
+                //     context.goNamed('verifyEmail');
+                //   }
+                // } on InvalidLoginCredentialsAuthException {
+                //   await showErrorDialog(
+                //     context,
+                //     'Неправильный адрес эл. почты или пароль',
+                //   );
+                // } on InvalidEmailAuthException {
+                //   await showErrorDialog(
+                //     context,
+                //     'Неверный формат эл. почты',
+                //   );
+                // } on WrongPasswordAuthException {
+                //   await showErrorDialog(
+                //     context,
+                //     'Неправильный пароль',
+                //   );
+                // } on GenericAuthException {
+                //   await showErrorDialog(
+                //     context,
+                //     'Ошибка аутоидентификации',
+                //   );
+                // }
               },
               btnText: 'Войти',
             ),

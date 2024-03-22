@@ -52,7 +52,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
             padding: const EdgeInsets.only(left: 36.0, right: 36.0),
             child: CustomButton(
               onPressed: () async {
-                await AuthService.firebase().logOut();
+                // await AuthService.firebase().logOut();
                 context.goNamed('login');
               },
               btnText: 'Готово, войти',
@@ -65,7 +65,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
             padding: const EdgeInsets.only(left: 36.0, right: 36.0),
             child: CustomButton(
               onPressed: () async {
-                AuthService.firebase().sendEmailVerification();
+                // AuthService.firebase().sendEmailVerification();
               },
               btnText: 'Отправить письмо еще раз',
             ),

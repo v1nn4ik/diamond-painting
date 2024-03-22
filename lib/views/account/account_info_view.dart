@@ -135,7 +135,7 @@ class _AccountInfoViewState extends State<AccountInfoView> {
                 onPressed: () async {
                   final shouldLogout = await deleteAccountDialog(context, _password);
                   if (shouldLogout) {
-                    await AuthService.firebase().deleteAccount(password: _password.text);
+                    // await AuthService.firebase().deleteAccount(password: _password.text);
                     context.goNamed('login');
                   }
                 },
@@ -158,7 +158,7 @@ class _AccountInfoViewState extends State<AccountInfoView> {
                 onPressed: () async {
                   final shouldLogout = await logOutDialog(context);
                   if (shouldLogout) {
-                    await AuthService.firebase().logOut();
+                    // await AuthService.firebase().logOut();
                     context.goNamed('login');
                   }
                 },

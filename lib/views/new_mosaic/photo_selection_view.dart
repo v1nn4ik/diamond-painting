@@ -57,14 +57,11 @@ class _PhotoSelectionViewState extends State<PhotoSelectionView> with SingleTick
       for (int i = 1; i <= 6; i++) {
         urls.add(body['demo'][i.toString()]);
       }
-      print(response);
       setState(() {
         mosaicUrlsStr = urls;
         favouriteMosaicUrl = urls[0];
         favouriteMosaic = 0;
       });
-    } else {
-      print(statusCode);
     }
   }
 

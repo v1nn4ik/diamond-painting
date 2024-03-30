@@ -20,7 +20,8 @@ class ButtonWithNumber extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          fixedSize: const Size(55, 63),
+          fixedSize: const Size(64, 64),
+          padding: const EdgeInsets.all(0),
           backgroundColor: isFavorite ? AppColors.warEnableColor : AppColors.warDisableColor,
         ),
         onPressed: onTap,
@@ -31,6 +32,7 @@ class ButtonWithNumber extends StatelessWidget {
             fontSize: 20,
             color: isFavorite ? Colors.white : Colors.black54,
           ),
+          textAlign: TextAlign.center,
         ),
       ),
     );

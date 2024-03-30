@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/utilities/takeInfoForInstruction.dart';
+import 'package:diamond_painting/widgets/button_list.dart';
+import 'package:diamond_painting/widgets/button_with_number.dart';
 import 'package:diamond_painting/widgets/cell/cell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 class Instruction extends StatefulWidget {
@@ -23,13 +28,11 @@ class _MyWidgetState extends State<Instruction> {
   List<dynamic> mosaicData = List.empty();
   bool isNew = false;
   bool hasMos = false;
+  int currentIndex = 0;
   bool _progressBarActive = false;
 
   @override
   Widget build(BuildContext context) {
-    int rows = 0;
-    int columns = 0;
-
     checkIsNewMosaicAndFirst();
     if (isNew == true || hasMos == false) {
       setState(() {
@@ -41,11 +44,22 @@ class _MyWidgetState extends State<Instruction> {
     }
 
     return _progressBarActive
-        ? Center(
-            child: Lottie.asset(
-              'assets/wait.json',
-              fit: BoxFit.cover,
-            ),
+        ? Column(
+            children: [
+              Lottie.asset(
+                'assets/wait.json',
+                fit: BoxFit.cover,
+              ),
+              Text(
+                'Создаем для вас инструкцию',
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  color: AppColors.btnTextColor,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           )
         : Column(
             children: [
@@ -99,17 +113,28 @@ class _MyWidgetState extends State<Instruction> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.only(top: 8, left: 8),
-                        child: Row(
+                        child: Column(
                           children: [
-                            for (int i = 0; i < width; i++)
-                              Column(
+                            for (int i = 0; i < height; i++)
+                              Row(
                                 children: [
-                                  for (int j = 0; j < height; j++)
+                                  for (int j = 0; j < width; j++)
                                     Cell(
-                                      text: '1',
+                                      text: mosaicData[currentIndex][i][j]['text'],
+                                      textColor: Color.fromRGBO(
+                                        mosaicData[currentIndex][i][j]['text_color'][0],
+                                        mosaicData[currentIndex][i][j]['text_color'][1],
+                                        mosaicData[currentIndex][i][j]['text_color'][2],
+                                        100,
+                                      ),
                                       paddingRight: 4,
                                       shape: shape,
-                                      color: cellsColor[1],
+                                      color: Color.fromRGBO(
+                                        mosaicData[currentIndex][i][j]['color'][0],
+                                        mosaicData[currentIndex][i][j]['color'][1],
+                                        mosaicData[currentIndex][i][j]['color'][2],
+                                        100,
+                                      ),
                                     ),
                                 ],
                               ),
@@ -149,6 +174,23 @@ class _MyWidgetState extends State<Instruction> {
                     ),
                 ],
               ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8, top: 33),
+                child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: ButtonList(
+                      buttons: [
+                        for (int i = 0; i < mosaicData.length; i++)
+                          ButtonWithNumber(
+                            number: i + 1,
+                            isFavorite: i == 0 ? true : false,
+                            onTap: () {
+                              buttonClicked(i);
+                            },
+                          ),
+                      ],
+                    )),
+              ),
             ],
           );
   }
@@ -172,10 +214,7 @@ class _MyWidgetState extends State<Instruction> {
     });
 
     List<dynamic> sizeShapeColor = await TakeInfoForInstruction().sizeShapeColor();
-    List<dynamic> data = await TakeInfoForInstruction().data();
-
-    print('data big cells: ${data.length}');
-    print('data cell: ${data[0][0].toString()}');
+    mosaicData = await TakeInfoForInstruction().data();
 
     width = sizeShapeColor[0];
     height = sizeShapeColor[1];
@@ -184,6 +223,12 @@ class _MyWidgetState extends State<Instruction> {
 
     setState(() {
       _progressBarActive = false;
+    });
+  }
+
+  void buttonClicked(int number) {
+    setState(() {
+      currentIndex = number;
     });
   }
 }

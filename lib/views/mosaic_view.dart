@@ -24,7 +24,7 @@ class MosaicView extends StatefulWidget {
 
 class _MosaicViewState extends State<MosaicView> with TickerProviderStateMixin {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
-  int currentIndex = 1;
+  // int currentIndex = 1;
   bool? hasMosaic = false;
 
   late String _localPath;
@@ -132,23 +132,23 @@ class _MosaicViewState extends State<MosaicView> with TickerProviderStateMixin {
                   ),
                 ),
                 const Instruction(),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 33),
-                  child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: ButtonList(
-                        buttons: [
-                          for (int i = 1; i <= 8; i++)
-                            ButtonWithNumber(
-                              number: i,
-                              isFavorite: i == 1 ? true : false,
-                              onTap: () {
-                                buttonClicked(i);
-                              },
-                            ),
-                        ],
-                      )),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(left: 8, top: 33),
+                //   child: SingleChildScrollView(
+                //       scrollDirection: Axis.horizontal,
+                //       child: ButtonList(
+                //         buttons: [
+                //           for (int i = 1; i <= 8; i++)
+                //             ButtonWithNumber(
+                //               number: i,
+                //               isFavorite: i == 1 ? true : false,
+                //               onTap: () {
+                //                 buttonClicked(i);
+                //               },
+                //             ),
+                //         ],
+                //       )),
+                // ),
               ],
             ))
         : Scaffold(
@@ -227,11 +227,11 @@ class _MosaicViewState extends State<MosaicView> with TickerProviderStateMixin {
     }
   }
 
-  void buttonClicked(int number) {
-    setState(() {
-      currentIndex = number;
-    });
-  }
+  // void buttonClicked(int number) {
+  //   setState(() {
+  //     currentIndex = number;
+  //   });
+  // }
 
   void checkMosaic() async {
     String value = await storage.read(key: 'hasMosaic') ?? '';

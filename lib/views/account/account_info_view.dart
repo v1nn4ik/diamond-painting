@@ -55,7 +55,7 @@ class _AccountInfoViewState extends State<AccountInfoView> {
               'assets/icons/user_info/email.svg',
             ),
             textTitle: 'Почта',
-            text: 'vinnik-03@mail.ru',
+            text: 'mail@mail.ru        ',
             editButton: IconButton(
               onPressed: () {},
               icon: SvgPicture.asset(
@@ -75,7 +75,7 @@ class _AccountInfoViewState extends State<AccountInfoView> {
               height: 35,
             ),
             textTitle: 'Телефон',
-            text: '+7 (936) 525 28 31   ',
+            text: '+7 (***) *** ** **        ',
             editButton: IconButton(
               onPressed: () {},
               icon: SvgPicture.asset(

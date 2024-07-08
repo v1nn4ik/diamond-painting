@@ -1,16 +1,16 @@
 import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/custom_button_with_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class MosaicColorView extends StatelessWidget {
   const MosaicColorView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const FlutterSecureStorage storage = FlutterSecureStorage();
+    final userBox = Hive.box('userbox');
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
@@ -41,7 +41,7 @@ class MosaicColorView extends StatelessWidget {
             ),
             CustomButtomWithImage(
               onPressed: () {
-                storage.write(key: 'color', value: 'bw');
+                userBox.put('color', 'black_white');
                 context.goNamed('mosaicShape');
               },
               btnText: 'Черно-белый',
@@ -52,7 +52,7 @@ class MosaicColorView extends StatelessWidget {
             ),
             CustomButtomWithImage(
               onPressed: () {
-                storage.write(key: 'color', value: 'sepia');
+                userBox.put('color', 'sepia');
                 context.goNamed('mosaicShape');
               },
               btnText: 'Cепия',
@@ -63,7 +63,7 @@ class MosaicColorView extends StatelessWidget {
             ),
             CustomButtomWithImage(
               onPressed: () {
-                storage.write(key: 'color', value: 'popart');
+                userBox.put('color', 'pop_art');
                 context.goNamed('mosaicShape');
               },
               btnText: 'Поп-арт',

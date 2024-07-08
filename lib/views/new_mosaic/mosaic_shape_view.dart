@@ -1,17 +1,19 @@
 import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/custom_button_with_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class MosaicShapeView extends StatelessWidget {
   const MosaicShapeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const FlutterSecureStorage storage = FlutterSecureStorage();
+    // const FlutterSecureStorage storage = FlutterSecureStorage();
+    final _userBox = Hive.box('userbox');
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
@@ -42,8 +44,9 @@ class MosaicShapeView extends StatelessWidget {
             ),
             CustomButtomWithImage(
               onPressed: () {
-                storage.write(key: 'shape', value: 'square');
-                print('square');
+                // storage.write(key: 'shape', value: 'square');
+                _userBox.put('shape', 'square');
+
                 context.goNamed('mosaicSize');
               },
               btnText: 'Квадратная',
@@ -58,8 +61,8 @@ class MosaicShapeView extends StatelessWidget {
             ),
             CustomButtomWithImage(
               onPressed: () {
-                storage.write(key: 'shape', value: 'circle');
-                print('circle');
+                // storage.write(key: 'shape', value: 'circle');
+                _userBox.put('shape', 'circle');
                 context.goNamed('mosaicSize');
               },
               btnText: 'Круглая',

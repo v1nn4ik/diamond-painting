@@ -1,18 +1,18 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:diamond_painting/app_colors.dart';
-import 'package:diamond_painting/widgets/button_list.dart';
-import 'package:diamond_painting/widgets/button_with_number.dart';
 import 'package:diamond_painting/widgets/instruction.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
 import 'dart:math';
 
 class MosaicView extends StatefulWidget {
@@ -23,8 +23,7 @@ class MosaicView extends StatefulWidget {
 }
 
 class _MosaicViewState extends State<MosaicView> with TickerProviderStateMixin {
-  final FlutterSecureStorage storage = const FlutterSecureStorage();
-  // int currentIndex = 1;
+  final userBox = Hive.box('userbox');
   bool? hasMosaic = false;
 
   late String _localPath;
@@ -90,26 +89,29 @@ class _MosaicViewState extends State<MosaicView> with TickerProviderStateMixin {
 
                                     _permissionReady = await _checkPermission();
                                     if (_permissionReady) {
-                                      Dio dio = Dio();
-                                      MultipartFile file = await MultipartFile.fromFile(
-                                        await storage.read(key: 'photo') ?? '',
-                                        filename: 'image',
-                                      );
-                                      var formData = FormData();
-                                      formData.files.add(MapEntry('img', file));
-                                      Response response = await dio.post(
-                                        'http://10.0.2.2:8000/mosaic/manual',
-                                        data: formData,
-                                      );
+                                      var getPdf = http.Request(
+                                          'GET',
+                                          Uri.parse(
+                                              'http://80.87.105.76:1323/api/v1/mosaic/manual/${await userBox.get('imgId')}/pdf'));
+
+                                      getPdf.headers.addAll({
+                                        HttpHeaders.authorizationHeader: '${await userBox.get('accessToken')}',
+                                        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+                                      });
+
+                                      var dataGetRequest = await getPdf.send();
+                                      var pdfData = await http.Response.fromStream(dataGetRequest);
+                                      var data = json.decode(pdfData.body);
 
                                       await _prepareSaveDir();
-                                      String instructionUrl = response.data.toString();
+                                      String instructionUrl = data['manual'];
                                       var rng = Random();
                                       await Dio().download(
                                         instructionUrl,
-                                        "$_localPath/Инструкция${rng.nextInt(1000000)}.pdf",
+                                        "$_localPath/Инструкция Kaleido${rng.nextInt(9999999)}.pdf",
                                       );
-                                      storage.write(key: 'mosaicInstruction', value: instructionUrl);
+
+                                      userBox.put('mosaicInstruction', instructionUrl);
 
                                       setState(() {
                                         _progressBarActive = false;
@@ -132,25 +134,9 @@ class _MosaicViewState extends State<MosaicView> with TickerProviderStateMixin {
                   ),
                 ),
                 const Instruction(),
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 8, top: 33),
-                //   child: SingleChildScrollView(
-                //       scrollDirection: Axis.horizontal,
-                //       child: ButtonList(
-                //         buttons: [
-                //           for (int i = 1; i <= 8; i++)
-                //             ButtonWithNumber(
-                //               number: i,
-                //               isFavorite: i == 1 ? true : false,
-                //               onTap: () {
-                //                 buttonClicked(i);
-                //               },
-                //             ),
-                //         ],
-                //       )),
-                // ),
               ],
-            ))
+            ),
+          )
         : Scaffold(
             backgroundColor: AppColors.backgroundColor,
             body: Column(
@@ -227,14 +213,8 @@ class _MosaicViewState extends State<MosaicView> with TickerProviderStateMixin {
     }
   }
 
-  // void buttonClicked(int number) {
-  //   setState(() {
-  //     currentIndex = number;
-  //   });
-  // }
-
   void checkMosaic() async {
-    String value = await storage.read(key: 'hasMosaic') ?? '';
+    String value = await userBox.get('hasMosaic');
     if (value == 'true') {
       setState(() {
         hasMosaic = true;

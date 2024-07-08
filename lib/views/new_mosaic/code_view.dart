@@ -1,9 +1,9 @@
 import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class CodeView extends StatefulWidget {
   const CodeView({super.key});
@@ -15,7 +15,8 @@ class CodeView extends StatefulWidget {
 class _CodeViewState extends State<CodeView> {
   @override
   Widget build(BuildContext context) {
-    const FlutterSecureStorage storage = FlutterSecureStorage();
+    // const FlutterSecureStorage storage = FlutterSecureStorage();
+    final userBox = Hive.box('userbox');
     late final TextEditingController code = TextEditingController();
 
     @override
@@ -99,9 +100,12 @@ class _CodeViewState extends State<CodeView> {
                     context.pop();
                   }
 
-                  storage.write(key: 'code', value: code.text);
-                  storage.write(key: 'hasMosaic', value: 'true');
-                  storage.write(key: 'isNew', value: 'true');
+                  // storage.write(key: 'code', value: code.text);
+                  // storage.write(key: 'hasMosaic', value: 'true');
+                  // storage.write(key: 'isNew', value: 'true');
+                  userBox.put('code', code.text);
+                  userBox.put('hasMosaic', 'true');
+                  userBox.put('isNew', 'true');
 
                   context.goNamed('Mosaic');
                 },

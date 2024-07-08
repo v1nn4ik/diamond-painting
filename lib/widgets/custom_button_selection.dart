@@ -9,7 +9,7 @@ class CustomButtonSelection extends StatelessWidget {
   const CustomButtonSelection({
     super.key,
     this.width = 90,
-    this.height = 140,
+    this.height = 130,
     required this.imageUrl,
     required this.onTap,
     this.borderRadius = 15,

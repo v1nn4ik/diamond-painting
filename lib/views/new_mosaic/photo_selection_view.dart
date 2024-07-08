@@ -6,10 +6,11 @@ import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/custom_button.dart';
 import 'package:diamond_painting/widgets/custom_button_selection.dart';
 import 'package:diamond_painting/widgets/custom_container.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 
@@ -29,57 +30,53 @@ class _PhotoSelectionViewState extends State<PhotoSelectionView> with SingleTick
   Timer? timer;
   int? statusCode;
 
-  void _takeMosaics() async {
-    const FlutterSecureStorage storage = FlutterSecureStorage();
+  Future<void> _takeMosaics() async {
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) async {
+      final userBox = Hive.box('userbox');
+      String imgId = await userBox.get('imgId');
+      String ownerId = await userBox.get('ownerId');
 
-    var requestGetMosaic = http.Request(
-      'GET',
-      Uri.parse('http://10.0.2.2:1323/api/v1/mosaic/demo'),
-    );
+      String baseUrl = 'http://80.87.105.76:1323/api/v1/mosaic/demo/$imgId?owner_id=$ownerId';
 
-    requestGetMosaic.headers.addAll({
-      HttpHeaders.authorizationHeader: '${await storage.read(key: 'accessToken')}',
-      HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-    });
-    String id = await storage.read(key: 'imgId') ?? '';
-    String ownerId = await storage.read(key: 'ownerId') ?? '';
-    requestGetMosaic.body = json.encode({
-      'id': id,
-      'ownerId': ownerId,
-    });
-    var mosaicUrls = await requestGetMosaic.send();
-    statusCode = mosaicUrls.statusCode;
+      var uri = Uri.parse(baseUrl).replace(queryParameters: {'owner_id': ownerId});
 
-    if (statusCode == 200) {
-      var response = await http.Response.fromStream(mosaicUrls);
-      final body = json.decode(response.body);
-      List<String> urls = [];
-      for (int i = 1; i <= 6; i++) {
-        urls.add(body['demo'][i.toString()]);
+      var response = await http.get(uri);
+      statusCode = response.statusCode;
+
+      if (statusCode == 200) {
+        Map<dynamic, dynamic> body = json.decode(response.body);
+        final bodyValues = body.values.toList();
+        List<String> urls = [];
+        for (int i = 0; i <= 5; i++) {
+          urls.add(bodyValues[i]);
+        }
+        setState(() {
+          mosaicUrlsStr = urls;
+          favouriteMosaicUrl = urls[0];
+          favouriteMosaic = 0;
+        });
+        timer?.cancel();
+      } else {
+        print('Failed to fetch data. Status code: ${response.statusCode}');
       }
-      setState(() {
-        mosaicUrlsStr = urls;
-        favouriteMosaicUrl = urls[0];
-        favouriteMosaic = 0;
-      });
-    }
+    });
   }
 
   @override
   void initState() {
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      _takeMosaics();
-      if (statusCode == 200) {
-        timer?.cancel();
-      }
-    });
-
+    _takeMosaics();
     super.initState();
   }
 
   @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    const FlutterSecureStorage storage = FlutterSecureStorage();
+    final userBox = Hive.box('userbox');
 
     return Scaffold(
         appBar: AppBar(
@@ -110,6 +107,7 @@ class _PhotoSelectionViewState extends State<PhotoSelectionView> with SingleTick
                       child: Container(),
                     ),
                     CustomContainer(
+                      height: 270,
                       imageUrl: favouriteMosaicUrl,
                     ),
                     Flexible(
@@ -125,6 +123,7 @@ class _PhotoSelectionViewState extends State<PhotoSelectionView> with SingleTick
                           if (mosaicUrlsStr != null) ...[
                             for (int i = 0; i <= 5; i++)
                               CustomButtonSelection(
+                                width: 84,
                                 onTap: () {
                                   setState(() {
                                     favouriteMosaicUrl = mosaicUrlsStr![i];
@@ -145,7 +144,7 @@ class _PhotoSelectionViewState extends State<PhotoSelectionView> with SingleTick
                       flex: 1,
                       child: CustomButton(
                         onPressed: () {
-                          storage.write(key: 'favouriteMosaic', value: favouriteMosaic.toString());
+                          userBox.put('favouriteMosaic', (favouriteMosaic! + 1).toString());
                           context.goNamed('code');
                         },
                         btnText: 'Далее',

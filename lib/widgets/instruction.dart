@@ -6,8 +6,8 @@ import 'package:diamond_painting/widgets/button_list.dart';
 import 'package:diamond_painting/widgets/button_with_number.dart';
 import 'package:diamond_painting/widgets/cell/cell.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:lottie/lottie.dart';
 
 class Instruction extends StatefulWidget {
@@ -20,7 +20,8 @@ class Instruction extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<Instruction> {
-  FlutterSecureStorage storage = const FlutterSecureStorage();
+  final userBox = Hive.box('userbox');
+
   int width = 0;
   int height = 0;
   double shape = 0;
@@ -29,7 +30,7 @@ class _MyWidgetState extends State<Instruction> {
   bool isNew = false;
   bool hasMos = false;
   int currentIndex = 0;
-  bool _progressBarActive = false;
+  bool _progressBarActive = true;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class _MyWidgetState extends State<Instruction> {
         hasMos = true;
         isNew = false;
       });
-      storage.write(key: 'isNew', value: 'false');
+      userBox.put('isNew', 'false');
       takeInfo();
     }
 
@@ -196,12 +197,12 @@ class _MyWidgetState extends State<Instruction> {
   }
 
   void checkIsNewMosaicAndFirst() async {
-    if (await storage.read(key: 'isNew') == 'true') {
+    if (userBox.get('isNew') == 'true') {
       setState(() {
         isNew = true;
       });
     }
-    if (await storage.read(key: 'hasMosaic') == 'true') {
+    if (userBox.get('hasMosaic') == 'true') {
       setState(() {
         hasMos = true;
       });

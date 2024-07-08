@@ -2,9 +2,9 @@ import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/card_widget.dart';
 import 'package:diamond_painting/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class WorksRecView extends StatefulWidget {
   const WorksRecView({super.key});
@@ -14,7 +14,8 @@ class WorksRecView extends StatefulWidget {
 }
 
 class _WorksRecViewState extends State<WorksRecView> {
-  final FlutterSecureStorage storage = const FlutterSecureStorage();
+  final userBox = Hive.box('userbox');
+
   Color _btnColor1 = AppColors.warEnableColor;
   Color _btnColor2 = AppColors.warDisableColor;
   Color _btnTextColor1 = AppColors.warEnableTextColor;
@@ -35,7 +36,7 @@ class _WorksRecViewState extends State<WorksRecView> {
   ];
 
   void checkMosaic() async {
-    String value = await storage.read(key: 'hasMosaic') ?? '';
+    String value = await userBox.get('hasMosaic');
     if (value == 'true') {
       setState(() {
         hasMosaic = true;
@@ -98,21 +99,31 @@ class _WorksRecViewState extends State<WorksRecView> {
             ),
           ),
           hasMosaic == true
-              ? Column(
-                  children: [
-                    Center(
-                      child: Wrap(
-                        spacing: 32,
-                        runSpacing: 32,
-                        children: [
-                          cards[0],
-                          cards[1],
-                          cards[1],
-                          cards[1],
-                        ],
-                      ),
-                    ),
-                  ],
+              ?
+              // Column(
+              //     children: [
+              //       Center(
+              //         child: Wrap(
+              //           spacing: 32,
+              //           runSpacing: 32,
+              //           children: [
+              //             cards[0],
+              //             cards[1],
+              //             cards[1],
+              //             cards[1],
+              //           ],
+              //         ),
+              //       ),
+              //     ],
+              //   )
+              Text(
+                  'У вас 1 активная работа',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.montserrat(
+                    color: AppColors.btnTextColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
                 )
               : Text(
                   'Нет активных работ :(',

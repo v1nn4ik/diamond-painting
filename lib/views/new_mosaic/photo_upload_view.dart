@@ -1,12 +1,18 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:diamond_painting/app_colors.dart';
 import 'package:diamond_painting/widgets/custom_button.dart';
 import 'package:dio/dio.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 
 class PhotoUploadView extends StatefulWidget {
   const PhotoUploadView({super.key});
@@ -16,6 +22,31 @@ class PhotoUploadView extends StatefulWidget {
 }
 
 class _PhotoUploadViewState extends State<PhotoUploadView> {
+  Future<Map<String, dynamic>> uploadFile(String url, File file, String canvasFormat, String palette) async {
+    var stream = http.ByteStream(file.openRead());
+    var length = await file.length();
+
+    var uri = Uri.parse(url);
+    var request = http.MultipartRequest("POST", uri);
+
+    var multipartFile = http.MultipartFile('img', stream, length, filename: path.basename(file.path));
+    request.files.add(multipartFile);
+
+    request.fields['canvas_format'] = 'A$canvasFormat'.toUpperCase();
+    request.fields['palette'] = palette;
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      print('File and fields uploaded successfully!');
+    } else {
+      print('Failed to upload. Status code: ${response.statusCode}');
+    }
+
+    final respStr = json.decode(await response.stream.bytesToString());
+    return respStr;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +77,29 @@ class _PhotoUploadViewState extends State<PhotoUploadView> {
           ),
           CustomButton(
             onPressed: () async {
-              const FlutterSecureStorage storage = FlutterSecureStorage();
+              final userBox = Hive.box('userbox');
+
+              Map<String, String> body = {
+                'login': 'cuteube1@gmail.com',
+                'password': 'cute',
+              };
+              var responseAuth = await http.post(
+                Uri.parse('http://80.87.105.76:1323/api/v1/auth/login'),
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: jsonEncode(body),
+              );
+
+              if (responseAuth.statusCode == 200) {
+                print('Login successful!');
+                print('Response body: ${responseAuth.body}');
+              } else {
+                print('Failed to login. Status code: ${responseAuth.statusCode}');
+              }
+              var authData = (json.decode(responseAuth.body)).entries.toList();
+
+              userBox.put('accessToken', 'Bearer ${authData.elementAt(0).value}');
 
               String? imagePath;
 
@@ -77,37 +130,19 @@ class _PhotoUploadViewState extends State<PhotoUploadView> {
                 });
               }
 
-              String? canvasFormat = await storage.read(key: 'size');
-              String? palette = await storage.read(key: 'color');
+              String? canvasFormat = await userBox.get('size');
+              String? palette = await userBox.get('color');
 
-              Dio dio = Dio();
+              String url = 'http://80.87.105.76:1323/api/v1/mosaic/demo/upload';
+              File file = File(imagePath!);
 
-              Response loginResponse = await dio.post(
-                'http://10.0.2.2:1323/api/v1/auth/login',
-                data: {
-                  'login': 'test@test.com',
-                  'password': 'test',
-                },
-              );
+              final response = await uploadFile(url, file, canvasFormat!, palette!);
+              final responseData = response.entries.toList();
 
-              storage.write(key: 'accessToken', value: 'Bearer ${loginResponse.data['access_token']}');
+              userBox.put('photo', imagePath);
 
-              MultipartFile file = await MultipartFile.fromFile(
-                imagePath!,
-                filename: 'image',
-              );
-              var formData = FormData();
-              formData.files.add(MapEntry('img', file));
-              formData.fields.add(MapEntry('canvasFormat', canvasFormat!.toUpperCase()));
-              formData.fields.add(MapEntry('palette', palette!));
-              var response = await dio.post(
-                'http://10.0.2.2:1323/api/v1/mosaic/demo/upload',
-                data: formData,
-              );
-              
-              storage.write(key: 'photo', value: imagePath);
-              storage.write(key: 'imgId', value: response.data['imgId']);
-              storage.write(key: 'ownerId', value: response.data['ownerId']);
+              userBox.put('imgId', responseData.elementAt(0).value);
+              userBox.put('ownerId', responseData.elementAt(1).value);
 
               context.goNamed('photoSelection');
             },
